@@ -1,1 +1,857 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Ashes | Ramadan Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Reem+Kufi:wght@400;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ashes: {
+                            950: '#050505',
+                            900: '#121212', 
+                            800: '#1e1e1e',
+                            700: '#2d2d2d',
+                        },
+                        gold: {
+                            300: '#fcd34d',
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                            700: '#b45309',
+                            800: '#92400e',
+                        },
+                        emerald: {
+                            400: '#34d399',
+                            500: '#10b981',
+                            900: '#064e3b',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Amiri', 'serif'],
+                        arabic: ['Reem Kufi', 'sans-serif'],
+                    },
+                    animation: {
+                        'spin-slow': 'spin 15s linear infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'click': 'click 0.1s ease-in-out',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-6px)' },
+                        },
+                        click: {
+                            '0%': { transform: 'scale(1)' },
+                            '50%': { transform: 'scale(0.95)' },
+                            '100%': { transform: 'scale(1)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #050505;
+            color: #e5e7eb;
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .font-arabic-title {
+            font-family: 'Amiri', serif;
+        }
+        .islamic-pattern {
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(217, 119, 6, 0.05) 0%, transparent 50%),
+                linear-gradient(30deg, #121212 12%, transparent 12.5%, transparent 87%, #121212 87.5%, #121212),
+                linear-gradient(150deg, #121212 12%, transparent 12.5%, transparent 87%, #121212 87.5%, #121212),
+                linear-gradient(30deg, #121212 12%, transparent 12.5%, transparent 87%, #121212 87.5%, #121212),
+                linear-gradient(150deg, #121212 12%, transparent 12.5%, transparent 87%, #121212 87.5%, #121212),
+                radial-gradient(#d97706 1px, transparent 1px);
+            background-size: 100% 100%, 80px 140px, 80px 140px, 80px 140px, 80px 140px, 40px 40px;
+            background-position: 0 0, 0 0, 0 0, 40px 70px, 40px 70px, 0 0;
+            opacity: 0.15;
+        }
+        .glass-panel {
+            background: rgba(20, 20, 20, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+        .glass-panel-highlight {
+            background: rgba(217, 119, 6, 0.08);
+            border: 1px solid rgba(217, 119, 6, 0.3);
+        }
+        .gold-glow {
+            box-shadow: 0 0 25px rgba(217, 119, 6, 0.15);
+        }
+        .hidden { display: none; }
+        .fade-in { animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .tasbih-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Custom Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #1a1a1a; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 3px; }
+
+        /* Custom Range Slider */
+        input[type=range] {
+            -webkit-appearance: none;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #fbbf24 30%, #d97706 100%);
+            cursor: pointer;
+            margin-top: -10px;
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.6);
+            border: 2px solid #fff;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body class="min-h-screen relative overflow-x-hidden selection:bg-gold-500 selection:text-black">
+
+    <!-- Background Pattern -->
+    <div class="fixed inset-0 islamic-pattern pointer-events-none z-0"></div>
+
+    <!-- Decorative Top Gradient -->
+    <div class="fixed top-0 left-0 right-0 h-48 bg-gradient-to-b from-gold-900/10 via-ashes-950/50 to-transparent pointer-events-none z-0"></div>
+
+    <!-- Auth Screen -->
+    <div id="authScreen" class="relative z-10 flex flex-col items-center justify-center min-h-screen p-6">
+        <div class="glass-panel p-10 rounded-3xl shadow-2xl max-w-sm w-full text-center border-t border-b border-gold-600/30 gold-glow relative overflow-hidden">
+            
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gold-600/5 rounded-full blur-3xl -z-10"></div>
+
+            <!-- LOGO PLACEHOLDER -->
+            <div class="mb-8 flex justify-center animate-float">
+                <div class="w-32 h-32 rounded-full border border-gold-500/30 bg-black/40 flex items-center justify-center group overflow-hidden relative shadow-2xl shadow-gold-900/20 backdrop-blur-sm">
+                    <i class="fas fa-fire text-5xl text-gradient-to-br from-gold-400 to-gold-700 text-gold-500 group-hover:scale-110 transition-transform duration-700"></i>
+                    <div class="absolute inset-0 rounded-full border-2 border-dashed border-gold-500/20 animate-spin-slow"></div>
+                </div>
+            </div>
+
+            <div class="mb-8 relative z-10">
+                <p class="font-arabic text-3xl text-gold-500 mb-2 drop-shadow-lg">بِسْمِ ٱللَّٰهِ</p>
+                <h1 class="text-5xl font-serif font-bold text-white tracking-widest mt-4 drop-shadow-xl">ASHES</h1>
+                <div class="h-0.5 w-12 bg-gold-600 mx-auto mt-3 mb-2"></div>
+                <p class="text-gray-400 text-[10px] tracking-[0.3em] uppercase">Ramadan Legacy Tracker</p>
+            </div>
+            
+            <div class="space-y-5 relative z-10">
+                <div class="text-left relative group">
+                    <input type="text" id="usernameInput" placeholder="Enter Member Name" 
+                        class="w-full bg-ashes-900/60 border border-gray-700 rounded-xl px-5 py-4 text-white focus:outline-none focus:border-gold-500 focus:bg-ashes-800 transition-all placeholder-gray-600 text-center font-serif text-lg tracking-wide">
+                </div>
+                <button onclick="app.login()" 
+                    class="w-full bg-gradient-to-r from-gold-700 via-gold-600 to-gold-500 hover:from-gold-600 hover:to-gold-400 text-black font-bold py-4 rounded-xl shadow-lg transform hover:translate-y-[-2px] active:translate-y-[1px] transition-all flex items-center justify-center gap-2">
+                    <span>ENTER PORTAL</span>
+                    <i class="fas fa-chevron-right text-xs"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App Screen -->
+    <div id="appScreen" class="relative z-10 hidden pb-24">
+        
+        <!-- Header -->
+        <header class="bg-ashes-950/80 backdrop-blur-xl border-b border-gray-800/50 sticky top-0 z-40 shadow-lg">
+            <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 bg-gradient-to-br from-ashes-800 to-black rounded-full flex items-center justify-center border border-gold-600/30 shadow-inner">
+                         <i class="fas fa-fire text-gold-500 text-sm"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-bold text-white leading-none tracking-widest text-lg font-serif">ASHES</h2>
+                        <div class="flex items-center gap-2">
+                            <p class="text-[9px] text-gold-500 uppercase tracking-widest" id="userDisplay">MEMBER</p>
+                            <span class="w-1 h-1 rounded-full bg-emerald-500 animate-pulse"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="app.logout()" class="text-gray-400 hover:text-red-400 bg-ashes-800/50 hover:bg-ashes-800 rounded-lg transition-colors p-2.5" title="Logout">
+                        <i class="fas fa-power-off"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="max-w-4xl mx-auto px-4 py-6 space-y-6">
+            
+            <!-- Quick Tools Section -->
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="app.openTasbih()" class="glass-panel p-4 rounded-xl flex items-center justify-between group hover:bg-ashes-800/50 transition-all">
+                    <div class="text-left">
+                        <p class="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Tool</p>
+                        <h4 class="text-white font-serif font-bold">Digital Tasbih</h4>
+                    </div>
+                    <i class="fas fa-fingerprint text-gold-500 text-2xl group-hover:scale-110 transition-transform"></i>
+                </button>
+                <button onclick="app.openDuas()" class="glass-panel p-4 rounded-xl flex items-center justify-between group hover:bg-ashes-800/50 transition-all">
+                    <div class="text-left">
+                        <p class="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Library</p>
+                        <h4 class="text-white font-serif font-bold">Essential Duas</h4>
+                    </div>
+                    <i class="fas fa-praying-hands text-emerald-400 text-2xl group-hover:scale-110 transition-transform"></i>
+                </button>
+            </div>
+
+            <!-- Daily Verse Card -->
+            <div class="glass-panel p-6 rounded-2xl text-center relative overflow-hidden border-t border-gold-600/50 group">
+                <div class="absolute -top-10 -right-10 w-40 h-40 bg-gold-600/10 rounded-full blur-3xl group-hover:bg-gold-600/20 transition-all duration-700"></div>
+                <div class="absolute top-0 right-0 p-4 opacity-5"><i class="fas fa-quran text-6xl"></i></div>
+                
+                <span class="inline-block px-3 py-1 rounded-full bg-gold-900/30 border border-gold-600/30 text-[10px] text-gold-400 uppercase tracking-wider mb-3">Daily Verse</span>
+                <p class="font-arabic text-2xl md:text-3xl text-white mb-3 leading-relaxed drop-shadow-md" id="dailyArabic">بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</p>
+                <p class="text-gray-400 text-sm italic font-serif leading-relaxed" id="dailyEnglish">"In the name of Allah, the Most Gracious, the Most Merciful."</p>
+            </div>
+
+            <!-- Dashboard Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+                <div class="glass-panel p-4 rounded-2xl flex flex-col items-center justify-center relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gold-600/50"></div>
+                    <p class="text-3xl font-bold text-white mt-2" id="statFasts">0</p>
+                    <p class="text-gray-500 text-[10px] uppercase tracking-widest mt-1 mb-1">Fasts</p>
+                </div>
+                <div class="glass-panel p-4 rounded-2xl flex flex-col items-center justify-center relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-emerald-600/50"></div>
+                    <p class="text-3xl font-bold text-emerald-400 mt-2" id="statSalah">0%</p>
+                    <p class="text-gray-500 text-[10px] uppercase tracking-widest mt-1 mb-1">Salah</p>
+                </div>
+                <div class="glass-panel p-4 rounded-2xl flex flex-col items-center justify-center relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-orange-600/50"></div>
+                    <p class="text-3xl font-bold text-orange-400 mt-2 flex items-center gap-1"><span id="statStreak">0</span><span class="text-sm">🔥</span></p>
+                    <p class="text-gray-500 text-[10px] uppercase tracking-widest mt-1 mb-1">Streak</p>
+                </div>
+                <div class="glass-panel p-4 rounded-2xl flex flex-col items-center justify-center relative overflow-hidden bg-gradient-to-br from-gray-900 to-black">
+                    <div class="absolute inset-0 bg-gold-600/5"></div>
+                    <div class="absolute top-0 left-0 w-full h-1 bg-yellow-400/50"></div>
+                    <p class="text-3xl font-bold text-yellow-400 mt-2" id="statPoints">0</p>
+                    <p class="text-gray-500 text-[10px] uppercase tracking-widest mt-1 mb-1">Score</p>
+                </div>
+            </div>
+
+            <!-- Log Button -->
+            <button onclick="app.openLogger()" 
+                class="w-full relative overflow-hidden bg-gradient-to-r from-ashes-800 to-ashes-900 border border-gold-600/30 hover:border-gold-500 p-6 rounded-2xl flex items-center justify-between group transition-all shadow-lg hover:shadow-gold-900/10">
+                <div class="text-left relative z-10">
+                    <h3 class="text-xl font-serif font-bold text-white group-hover:text-gold-400 transition-colors">Log Daily Progress</h3>
+                    <p class="text-sm text-gray-400">Record Salah, Fasting, Charity</p>
+                </div>
+                <div class="w-14 h-14 bg-gradient-to-br from-gold-500 to-gold-700 rounded-full flex items-center justify-center text-black shadow-lg shadow-gold-900/50 group-hover:scale-110 transition-transform relative z-10 group-hover:rotate-90 duration-300">
+                    <i class="fas fa-plus text-2xl"></i>
+                </div>
+            </button>
+
+            <!-- Khatamul Quran Tracker -->
+            <div class="glass-panel p-6 rounded-2xl border border-gray-800 relative overflow-hidden">
+                <div class="absolute -right-10 top-0 text-gray-800 opacity-20 transform rotate-12 pointer-events-none">
+                    <i class="fas fa-book-open text-9xl"></i>
+                </div>
+                <div class="relative z-10">
+                    <div class="flex justify-between items-end mb-4">
+                        <div>
+                            <h3 class="text-gold-500 font-bold text-lg flex items-center gap-2">
+                                <span class="w-8 h-8 rounded-lg bg-gold-900/40 flex items-center justify-center text-sm border border-gold-600/30"><i class="fas fa-book-open"></i></span>
+                                Khatam Tracker
+                            </h3>
+                            <p class="text-xs text-gray-400 mt-1 pl-10">Goal: 604 Pages</p>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-2xl font-bold text-white font-mono"><span id="khatamCurrentDisplay">0</span><span class="text-gray-600 text-lg">/604</span></div>
+                            <div class="text-[10px] text-emerald-500 font-bold uppercase tracking-wider" id="khatamPercent">0% Completed</div>
+                        </div>
+                    </div>
+                    <div class="relative h-3 bg-black/50 rounded-full overflow-hidden mb-6 border border-gray-700/50 shadow-inner">
+                        <div id="khatamBar" class="absolute top-0 left-0 h-full bg-gradient-to-r from-emerald-800 via-emerald-500 to-emerald-400 transition-all duration-1000" style="width: 0%"></div>
+                    </div>
+                    <div class="flex items-center gap-4 bg-ashes-900/50 p-3 rounded-xl border border-gray-800">
+                        <span class="text-[10px] text-gray-500 font-bold uppercase">Pg 1</span>
+                        <input type="range" min="0" max="604" value="0" id="khatamSlider" class="w-full" oninput="app.updateKhatamInput(this.value)">
+                        <span class="text-[10px] text-gray-500 font-bold uppercase">Pg 604</span>
+                    </div>
+                    <div class="flex justify-end mt-3">
+                        <button onclick="app.saveKhatam()" class="text-xs bg-ashes-800 hover:bg-gold-600 hover:text-black text-gold-500 border border-gold-600/30 px-4 py-2 rounded-lg transition-all font-bold shadow-lg flex items-center gap-2">
+                            <i class="fas fa-save"></i> Update
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- History Feed -->
+            <div>
+                <div class="flex justify-between items-end mb-4 px-1">
+                    <h3 class="text-gold-500/70 text-xs font-bold uppercase tracking-wider">Your Journey</h3>
+                    <span class="text-[10px] text-gray-600 uppercase">Recent Logs</span>
+                </div>
+                <div id="logsContainer" class="space-y-3"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Tasbih Modal -->
+    <div id="tasbihModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/95 backdrop-blur-md" onclick="app.closeTasbih()"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-sm glass-panel p-8 rounded-3xl border border-gold-600/30 text-center animate-fadeIn">
+            <h3 class="text-gold-500 font-serif text-2xl font-bold mb-1">Digital Tasbih</h3>
+            <p class="text-xs text-gray-500 uppercase tracking-widest mb-6">Dhikr Counter</p>
+            
+            <div class="bg-black/40 rounded-full w-48 h-48 mx-auto flex items-center justify-center border-4 border-gray-800 mb-6 relative">
+                <span id="tasbihCount" class="text-6xl font-mono font-bold text-white">0</span>
+                <div class="absolute inset-0 rounded-full border-t-2 border-gold-500/20 animate-spin-slow"></div>
+            </div>
+
+            <button onclick="app.tasbihClick()" class="tasbih-btn w-full bg-gradient-to-r from-emerald-600 to-emerald-500 text-white font-bold py-4 rounded-xl shadow-lg mb-3 text-lg">
+                COUNT
+            </button>
+            <button onclick="app.tasbihReset()" class="text-xs text-gray-500 hover:text-red-400">RESET COUNTER</button>
+        </div>
+    </div>
+
+    <!-- Duas Modal -->
+    <div id="duasModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/95 backdrop-blur-md" onclick="app.closeDuas()"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md h-[80vh] glass-panel rounded-3xl border border-gray-800 flex flex-col animate-fadeIn">
+            <div class="p-5 border-b border-gray-800 flex justify-between items-center bg-ashes-900/50 rounded-t-3xl">
+                <h3 class="text-white font-serif text-xl font-bold">Essential Duas</h3>
+                <button onclick="app.closeDuas()" class="text-gray-500 hover:text-white"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="p-6 overflow-y-auto space-y-6 flex-1 custom-scrollbar">
+                
+                <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50">
+                    <p class="text-[10px] text-gold-500 uppercase font-bold mb-2">Breaking Fast (Iftar)</p>
+                    <p class="font-arabic text-xl text-right mb-2 leading-loose">اللَّهُمَّ لَكَ صُمْتُ وَعَلَى رِزْقِكَ أَفْطَرْتُ</p>
+                    <p class="text-sm text-gray-400 italic">"O Allah, I fasted for You and I break my fast with Your sustenance."</p>
+                </div>
+
+                <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50">
+                    <p class="text-[10px] text-gold-500 uppercase font-bold mb-2">Beginning Fast (Suhoor)</p>
+                    <p class="font-arabic text-xl text-right mb-2 leading-loose">وَبِصَوْمِ غَدٍ نَّوَيْتُ مِنْ شَهْرِ رَمَضَانَ</p>
+                    <p class="text-sm text-gray-400 italic">"I intend to keep the fast for tomorrow in the month of Ramadan."</p>
+                </div>
+
+                <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50">
+                    <p class="text-[10px] text-gold-500 uppercase font-bold mb-2">First Ashra (Mercy)</p>
+                    <p class="font-arabic text-xl text-right mb-2 leading-loose">رَبِّ اغْفِرْ وَارْحَمْ وَأَنْتَ خَيْرُ الرَّاحِمِينَ</p>
+                    <p class="text-sm text-gray-400 italic">"O My Lord, forgive and have mercy, and You are the best of the Merciful."</p>
+                </div>
+
+                 <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50">
+                    <p class="text-[10px] text-gold-500 uppercase font-bold mb-2">Laylatul Qadr</p>
+                    <p class="font-arabic text-xl text-right mb-2 leading-loose">اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي</p>
+                    <p class="text-sm text-gray-400 italic">"O Allah, You are Forgiving and love forgiveness, so forgive me."</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logger Modal -->
+    <div id="logModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/95 backdrop-blur-md" onclick="app.closeLogger()"></div>
+        <div class="absolute bottom-0 md:top-1/2 md:left-1/2 md:transform md:-translate-x-1/2 md:-translate-y-1/2 md:bottom-auto w-full md:w-[500px] md:rounded-2xl bg-[#0f0f0f] border border-gray-800 shadow-2xl flex flex-col max-h-[90vh] animate-fadeIn">
+            
+            <div class="p-5 border-b border-gray-800 flex justify-between items-center bg-ashes-900/50 rounded-t-2xl">
+                <div>
+                    <h3 class="font-serif text-xl font-bold text-gold-500">Daily Record</h3>
+                    <p class="text-[10px] text-gray-400 uppercase tracking-widest">Accountability Check</p>
+                </div>
+                <button onclick="app.closeLogger()" class="text-gray-400 hover:text-white bg-ashes-800 p-2 rounded-full w-8 h-8 flex items-center justify-center transition-colors"><i class="fas fa-times"></i></button>
+            </div>
+
+            <div class="overflow-y-auto p-6 space-y-6 flex-1 custom-scrollbar" id="logFormContent">
+                
+                <!-- Date -->
+                <div>
+                    <label class="block text-gray-500 text-[10px] uppercase font-bold mb-2 tracking-wider">Select Date</label>
+                    <input type="date" id="logDate" class="w-full bg-ashes-900 border border-gray-800 rounded-xl p-4 text-white focus:border-gold-500 outline-none transition-colors">
+                </div>
+
+                <!-- Obligations -->
+                <div class="space-y-4">
+                    <h4 class="text-white font-bold text-sm uppercase flex items-center gap-2 border-b border-gray-800 pb-2">
+                        <i class="fas fa-star text-gold-600"></i> Obligations
+                    </h4>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="p-4 bg-ashes-800/30 rounded-xl border border-gray-700/30 flex items-center justify-between">
+                            <span class="text-gray-300 text-sm font-bold">Fasting?</span>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="checkFast" class="sr-only peer">
+                                <div class="w-11 h-6 bg-gray-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gold-600"></div>
+                            </label>
+                        </div>
+                         <div class="p-4 bg-ashes-800/30 rounded-xl border border-gray-700/30 flex items-center justify-between">
+                            <span class="text-gray-300 text-sm font-bold">Charity?</span>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="checkSadaqah" class="sr-only peer">
+                                <div class="w-11 h-6 bg-gray-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-500 text-[10px] uppercase font-bold mb-3 text-center tracking-wider">Prayers (Farz)</label>
+                        <div class="grid grid-cols-5 gap-2">
+                            <label class="cursor-pointer group"><input type="checkbox" class="peer sr-only prayer-check" value="Fajr"><div class="h-10 w-full rounded-lg bg-ashes-800 border border-gray-700 flex flex-col items-center justify-center text-gray-500 peer-checked:bg-emerald-900/30 peer-checked:border-emerald-500 peer-checked:text-emerald-400 transition-all"><span class="text-[9px] uppercase font-bold">Fajr</span></div></label>
+                            <label class="cursor-pointer group"><input type="checkbox" class="peer sr-only prayer-check" value="Dhuhr"><div class="h-10 w-full rounded-lg bg-ashes-800 border border-gray-700 flex flex-col items-center justify-center text-gray-500 peer-checked:bg-emerald-900/30 peer-checked:border-emerald-500 peer-checked:text-emerald-400 transition-all"><span class="text-[9px] uppercase font-bold">Dhuhr</span></div></label>
+                            <label class="cursor-pointer group"><input type="checkbox" class="peer sr-only prayer-check" value="Asr"><div class="h-10 w-full rounded-lg bg-ashes-800 border border-gray-700 flex flex-col items-center justify-center text-gray-500 peer-checked:bg-emerald-900/30 peer-checked:border-emerald-500 peer-checked:text-emerald-400 transition-all"><span class="text-[9px] uppercase font-bold">Asr</span></div></label>
+                            <label class="cursor-pointer group"><input type="checkbox" class="peer sr-only prayer-check" value="Maghrib"><div class="h-10 w-full rounded-lg bg-ashes-800 border border-gray-700 flex flex-col items-center justify-center text-gray-500 peer-checked:bg-emerald-900/30 peer-checked:border-emerald-500 peer-checked:text-emerald-400 transition-all"><span class="text-[9px] uppercase font-bold">Mag</span></div></label>
+                            <label class="cursor-pointer group"><input type="checkbox" class="peer sr-only prayer-check" value="Isha"><div class="h-10 w-full rounded-lg bg-ashes-800 border border-gray-700 flex flex-col items-center justify-center text-gray-500 peer-checked:bg-emerald-900/30 peer-checked:border-emerald-500 peer-checked:text-emerald-400 transition-all"><span class="text-[9px] uppercase font-bold">Isha</span></div></label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: Quran -->
+                <div class="space-y-4">
+                    <h4 class="text-white font-bold text-sm uppercase flex items-center gap-2 border-b border-gray-800 pb-2">
+                        <i class="fas fa-book-open text-gold-600"></i> Holy Quran
+                    </h4>
+                    
+                    <div class="flex items-center gap-2 mb-4 bg-ashes-900 p-2 rounded-xl border border-gray-800">
+                        <span class="text-gray-300 text-sm flex-1 pl-2">Did you read Quran?</span>
+                        <div class="flex gap-2">
+                            <button type="button" onclick="app.toggleQuran(true)" id="btnQuranYes" class="px-5 py-2 rounded-lg text-xs font-bold bg-ashes-800 border border-gray-700 text-gray-400 hover:text-white transition-all">Yes</button>
+                            <button type="button" onclick="app.toggleQuran(false)" id="btnQuranNo" class="px-5 py-2 rounded-lg text-xs font-bold bg-ashes-800 border border-gray-700 text-gray-400 hover:text-white transition-all">No</button>
+                        </div>
+                    </div>
+
+                    <!-- Hidden Quran Details -->
+                    <div id="quranDetails" class="hidden space-y-4 bg-ashes-800/20 p-5 rounded-xl border border-gold-600/20 animate-fadeIn">
+                        <div>
+                            <label class="block text-gray-500 text-[10px] uppercase font-bold mb-2">Which Surah?</label>
+                            <select id="surahSelect" class="w-full bg-ashes-900 border border-gray-700 rounded-xl p-3 text-white text-sm focus:border-gold-500 outline-none appearance-none">
+                                <option value="">Select Surah...</option>
+                                <!-- JS will populate this -->
+                            </select>
+                            
+                            <!-- Custom Input for "Other" -->
+                            <div id="customSurahContainer" class="hidden mt-2">
+                                <input type="text" id="customSurahInput" placeholder="Type Surah Name..." class="w-full bg-ashes-900 border border-gold-600/50 rounded-xl p-3 text-white text-sm focus:border-gold-500 outline-none placeholder-gray-600">
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-gray-500 text-[10px] uppercase font-bold mb-2">Verses/Pages</label>
+                                <input type="number" id="versesCount" placeholder="0" class="w-full bg-ashes-900 border border-gray-700 rounded-xl p-3 text-white text-sm focus:border-gold-500 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-gray-500 text-[10px] uppercase font-bold mb-2">Time</label>
+                                <select id="readTime" class="w-full bg-ashes-900 border border-gray-700 rounded-xl p-3 text-white text-sm focus:border-gold-500 outline-none">
+                                    <option value="Fajr">Fajr</option>
+                                    <option value="Noon">Noon</option>
+                                    <option value="Taraweeh">Taraweeh</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="bg-gradient-to-br from-ashes-950 to-black p-4 rounded-xl border border-gold-900/30">
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" id="checkTranslation" class="w-4 h-4 accent-gold-500 rounded bg-gray-700 border-gray-600" onchange="app.toggleTranslation()">
+                                <span class="ml-2 text-sm text-gold-400 font-bold">I read the Translation/Tafseer</span>
+                            </label>
+                            <div id="verificationSection" class="hidden mt-3 pt-3 border-t border-gray-800">
+                                <label class="block text-xs text-emerald-400 mb-2 font-bold flex items-center gap-2"><i class="fas fa-feather-alt"></i> Reflection Required</label>
+                                <textarea id="reflectionInput" rows="2" placeholder="What did you learn?" class="w-full bg-ashes-900/50 border border-gray-700 rounded-lg p-3 text-sm text-white focus:border-gold-500 transition-colors outline-none"></textarea>
+                                <p class="text-[9px] text-gray-500 mt-1 text-right" id="charCount">0/10 chars</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-5 border-t border-gray-800 bg-ashes-900/80 rounded-b-2xl backdrop-blur">
+                <button onclick="app.submitLog()" class="w-full bg-gradient-to-r from-gold-600 to-gold-500 hover:from-gold-500 hover:to-gold-400 text-black font-bold py-4 rounded-xl shadow-lg shadow-gold-900/30 transition-all flex justify-center items-center gap-2 transform active:scale-[0.98]">
+                    <i class="fas fa-save"></i> SAVE RECORD
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed top-5 right-5 z-50 transform translate-x-full transition-transform duration-300">
+        <div class="bg-ashes-800 border-l-4 border-gold-500 text-white px-6 py-4 rounded-lg shadow-2xl flex items-center border border-gray-700/50 backdrop-blur-md">
+            <i class="fas fa-check-circle text-gold-500 mr-3 text-xl"></i>
+            <div>
+                <h4 class="font-bold text-sm text-white">Success</h4>
+                <p class="text-xs text-gray-400" id="toastMsg">Action completed</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const surahList = [
+            "Al-Fatiha", "Al-Baqarah", "Al-Imran", "An-Nisa", "Al-Ma'idah", "Al-An'am", "Al-A'raf", "Al-Anfal", "At-Tawbah", "Yunus", "Hud", "Yusuf", "Ar-Ra'd", "Ibrahim", "Al-Hijr", "An-Nahl", "Al-Isra", "Al-Kahf", "Maryam", "Ta-Ha", "Al-Anbiya", "Al-Hajj", "Al-Mu'minun", "An-Nur", "Al-Furqan", "Ash-Shu'ara", "An-Naml", "Al-Qasas", "Al-Ankabut", "Ar-Rum", "Luqman", "As-Sajdah", "Al-Ahzab", "Saba", "Fatir", "Ya-Sin", "As-Saffat", "Sad", "Az-Zumar", "Ghafir", "Fussilat", "Ash-Shura", "Az-Zukhruf", "Ad-Dukhan", "Al-Jathiyah", "Al-Ahqaf", "Muhammad", "Al-Fath", "Al-Hujurat", "Qaf", "Adh-Dhariyat", "At-Tur", "An-Najm", "Al-Qamar", "Ar-Rahman", "Al-Waqi'ah", "Al-Hadid", "Al-Mujadila", "Al-Hashr", "Al-Mumtahanah", "As-Saff", "Al-Jumu'ah", "Al-Munafiqun", "At-Taghabun", "At-Talaq", "At-Tahrim", "Al-Mulk", "Al-Qalam", "Al-Haqqah", "Al-Ma'arij", "Nuh", "Al-Jinn", "Al-Muzzammil", "Al-Muddaththir", "Al-Qiyamah", "Al-Insan", "Al-Mursalat", "An-Naba", "An-Nazi'at", "Abasa", "At-Takwir", "Al-Infitar", "Al-Mutaffifin", "Al-Inshiqaq", "Al-Buruj", "At-Tariq", "Al-A'la", "Al-Ghashiyah", "Al-Fajr", "Al-Balad", "Ash-Shams", "Al-Layl", "Ad-Duhaa", "Ash-Sharh", "At-Tin", "Al-Alaq", "Al-Qadr", "Al-Bayyinah", "Az-Zalzalah", "Al-Adiyat", "Al-Qari'ah", "At-Takathur", "Al-Asr", "Al-Humazah", "Al-Fil", "Quraysh", "Al-Ma'un", "Al-Kawthar", "Al-Kafirun", "An-Nasr", "Al-Masad", "Al-Ikhlas", "Al-Falaq", "An-Nas"
+        ];
+
+        const verses = [
+            { ar: "فَإِنَّ مَعَ ٱلْعُسْرِ يُسْرًا", en: "For indeed, with hardship [will be] ease. (94:5)" },
+            { ar: "ٱللَّهُ نُورُ ٱلسَّمَٰوَٰتِ وَٱلْأَرْضِ", en: "Allah is the Light of the heavens and the earth. (24:35)" },
+            { ar: "وَقُل رَّبِّ زِدْنِى عِلْمًا", en: "And say, 'My Lord, increase me in knowledge.' (20:114)" },
+            { ar: "فَٱذْكُرُونِىٓ أَذْكُرْكُمْ", en: "So remember Me; I will remember you. (2:152)" },
+            { ar: "إِنَّ ٱللَّهَ مَعَ ٱلصَّٰبِرِينَ", en: "Indeed, Allah is with the patient. (2:153)" },
+            { ar: "يَٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُوا۟ كُتِبَ عَلَيْكُمُ ٱلصِّيَامُ", en: "O you who have believed, decreed upon you is fasting. (2:183)" },
+            { ar: "شَهْرُ رَمَضَانَ ٱلَّذِىٓ أُنزِلَ فِيهِ ٱلْقُرْءَانُ", en: "The month of Ramadhan [is that] in which was revealed the Qur'an. (2:185)" },
+            { ar: "وَإِذَا سَأَلَكَ عِبَادِى عَنِّى فَإِنِّى قَرِيبٌ", en: "And when My servants ask you concerning Me - indeed I am near. (2:186)" },
+            { ar: "أَلَا بِذِكْرِ ٱللَّهِ تَطْمَئِنُّ ٱلْقُلُوبُ", en: "Unquestionably, by the remembrance of Allah do hearts find rest. (13:28)" },
+            { ar: "وَقَالَ رَبُّكُمُ ٱدْعُونِىٓ أَسْتَجِبْ لَكُمْ", en: "And your Lord says, 'Call upon Me; I will respond to you.' (40:60)" },
+            { ar: "لَئِن شَكَرْتُمْ لَأَزِيدَنَّكُمْ", en: "If you are grateful, I will surely increase you [in favor]. (14:7)" },
+            { ar: "وَهُوَ مَعَكُمْ أَيْنَ مَا كُنتُمْ", en: "And He is with you wherever you are. (57:4)" }
+        ];
+
+        const app = {
+            state: {
+                user: null,
+                logs: [],
+                khatamPage: 0,
+                quranActive: false,
+                tasbihCount: 0
+            },
+
+            init: function() {
+                this.loadData();
+                this.populateSurahs();
+                const randomVerse = verses[Math.floor(Math.random() * verses.length)];
+                document.getElementById('dailyArabic').innerText = randomVerse.ar;
+                document.getElementById('dailyEnglish').innerText = `"${randomVerse.en}"`;
+                this.setTodayDate();
+                this.updateKhatamVisuals();
+                this.renderDashboard();
+                this.renderLogs();
+
+                document.getElementById('reflectionInput').addEventListener('input', (e) => {
+                    const count = e.target.value.length;
+                    const counter = document.getElementById('charCount');
+                    counter.innerText = `${count}/10 chars`;
+                    counter.style.color = count >= 10 ? '#34d399' : '#6b7280';
+                });
+
+                // Surah Selection Logic
+                document.getElementById('surahSelect').addEventListener('change', (e) => {
+                    const customInput = document.getElementById('customSurahContainer');
+                    if (e.target.value === 'Other') {
+                        customInput.classList.remove('hidden');
+                    } else {
+                        customInput.classList.add('hidden');
+                    }
+                });
+            },
+
+            populateSurahs: function() {
+                const select = document.getElementById('surahSelect');
+                // clear existing except first
+                select.innerHTML = '<option value="">Select Surah...</option>';
+                
+                surahList.forEach((surah, index) => {
+                    const option = document.createElement('option');
+                    option.value = surah;
+                    option.text = `${index + 1}. ${surah}`;
+                    select.appendChild(option);
+                });
+                
+                // Add Other/Juz options at end
+                const juzOption = document.createElement('option');
+                juzOption.value = "Juz Reading";
+                juzOption.text = "Juz Reading (Khatam)";
+                select.appendChild(juzOption);
+
+                const otherOption = document.createElement('option');
+                otherOption.value = "Other";
+                otherOption.text = "Other / Type Manually";
+                select.appendChild(otherOption);
+            },
+
+            loadData: function() {
+                try {
+                    const storedUser = localStorage.getItem('ashes_user');
+                    const storedLogs = localStorage.getItem('ashes_logs');
+                    const storedKhatam = localStorage.getItem('ashes_khatam');
+                    if (storedUser) {
+                        this.state.user = storedUser;
+                        this.showApp();
+                        document.getElementById('userDisplay').innerText = storedUser;
+                    }
+                    if (storedLogs) this.state.logs = JSON.parse(storedLogs);
+                    if (storedKhatam) this.state.khatamPage = parseInt(storedKhatam);
+                } catch(e) { console.log("Storage access error"); }
+            },
+
+            showApp: function() {
+                document.getElementById('authScreen').classList.add('hidden');
+                document.getElementById('appScreen').classList.remove('hidden');
+                document.getElementById('appScreen').classList.add('fade-in');
+            },
+
+            setTodayDate: function() {
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('logDate').value = today;
+            },
+
+            login: function() {
+                const name = document.getElementById('usernameInput').value.trim();
+                if (!name) return alert("Please enter your name");
+                this.state.user = name;
+                try { localStorage.setItem('ashes_user', name); } catch(e) {}
+                document.getElementById('userDisplay').innerText = name;
+                this.showApp();
+            },
+
+            logout: function() {
+                if(confirm("Log out of Team Ashes tracker?")) {
+                    try { localStorage.removeItem('ashes_user'); } catch(e) {}
+                    this.state.user = null;
+                    location.reload();
+                }
+            },
+
+            scrollToSection: function(id) {
+                const el = document.getElementById(id);
+                if (el) el.scrollIntoView({behavior: 'smooth'});
+            },
+
+            // --- Tasbih ---
+            openTasbih: function() {
+                document.getElementById('tasbihModal').classList.remove('hidden');
+                this.state.tasbihCount = 0;
+                document.getElementById('tasbihCount').innerText = 0;
+            },
+            closeTasbih: function() { document.getElementById('tasbihModal').classList.add('hidden'); },
+            tasbihClick: function() {
+                this.state.tasbihCount++;
+                document.getElementById('tasbihCount').innerText = this.state.tasbihCount;
+                if (navigator.vibrate) navigator.vibrate(20);
+            },
+            tasbihReset: function() {
+                if(confirm("Reset counter?")) {
+                    this.state.tasbihCount = 0;
+                    document.getElementById('tasbihCount').innerText = 0;
+                }
+            },
+
+            // --- Duas ---
+            openDuas: function() { document.getElementById('duasModal').classList.remove('hidden'); },
+            closeDuas: function() { document.getElementById('duasModal').classList.add('hidden'); },
+
+            // --- Khatam Functions ---
+            updateKhatamInput: function(val) {
+                document.getElementById('khatamCurrentDisplay').innerText = val;
+                const percent = Math.round((val / 604) * 100);
+                document.getElementById('khatamPercent').innerText = `${percent}% Completed`;
+                document.getElementById('khatamBar').style.width = `${percent}%`;
+            },
+            saveKhatam: function() {
+                const val = document.getElementById('khatamSlider').value;
+                this.state.khatamPage = val;
+                try { localStorage.setItem('ashes_khatam', val); } catch(e) {}
+                this.showToast("Khatam progress updated!");
+                this.renderDashboard();
+            },
+            updateKhatamVisuals: function() {
+                const val = this.state.khatamPage;
+                document.getElementById('khatamSlider').value = val;
+                this.updateKhatamInput(val);
+            },
+
+            // --- Logger Functions ---
+            openLogger: function() {
+                document.getElementById('logModal').classList.remove('hidden');
+                this.setTodayDate();
+                this.toggleQuran(false);
+                document.getElementById('checkTranslation').checked = false;
+                this.toggleTranslation();
+                document.querySelectorAll('.prayer-check').forEach(c => c.checked = false);
+                document.getElementById('checkFast').checked = false;
+                document.getElementById('checkSadaqah').checked = false;
+                document.getElementById('versesCount').value = '';
+                document.getElementById('reflectionInput').value = '';
+                document.getElementById('surahSelect').value = '';
+                document.getElementById('customSurahContainer').classList.add('hidden');
+                document.getElementById('customSurahInput').value = '';
+            },
+            closeLogger: function() { document.getElementById('logModal').classList.add('hidden'); },
+            toggleQuran: function(isActive) {
+                this.state.quranActive = isActive;
+                const details = document.getElementById('quranDetails');
+                const btnYes = document.getElementById('btnQuranYes');
+                const btnNo = document.getElementById('btnQuranNo');
+                if (isActive) {
+                    details.classList.remove('hidden');
+                    btnYes.className = "px-5 py-2 rounded-lg text-xs font-bold bg-gold-600 text-black shadow-lg transition-all transform scale-105";
+                    btnNo.className = "px-5 py-2 rounded-lg text-xs font-bold bg-ashes-800 border border-gray-700 text-gray-500 hover:text-white transition-all";
+                } else {
+                    details.classList.add('hidden');
+                    btnNo.className = "px-5 py-2 rounded-lg text-xs font-bold bg-gray-700 text-white shadow-lg transition-all transform scale-105";
+                    btnYes.className = "px-5 py-2 rounded-lg text-xs font-bold bg-ashes-800 border border-gray-700 text-gray-500 hover:text-white transition-all";
+                }
+            },
+            toggleTranslation: function() {
+                const isChecked = document.getElementById('checkTranslation').checked;
+                const verifySection = document.getElementById('verificationSection');
+                if (isChecked) { verifySection.classList.remove('hidden'); verifySection.classList.add('fade-in'); }
+                else { verifySection.classList.add('hidden'); }
+            },
+            deleteLog: function(id) {
+                if(confirm("Delete this entry?")) {
+                    this.state.logs = this.state.logs.filter(l => l.id !== id);
+                    try { localStorage.setItem('ashes_logs', JSON.stringify(this.state.logs)); } catch(e) {}
+                    this.renderDashboard();
+                    this.renderLogs();
+                    this.showToast("Entry deleted");
+                }
+            },
+
+            // --- Stats & Scoring ---
+            calculateStreak: function(logs) {
+                if (!logs || logs.length === 0) return 0;
+                const dates = [...new Set(logs.map(l => l.date))].sort((a, b) => new Date(b) - new Date(a));
+                const today = new Date().toISOString().split('T')[0];
+                const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+                if (dates[0] !== today && dates[0] !== yesterday) return 0;
+                let streak = 1;
+                for (let i = 0; i < dates.length - 1; i++) {
+                    const curr = new Date(dates[i]);
+                    const next = new Date(dates[i+1]);
+                    const diffTime = Math.abs(curr - next);
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+                    if (diffDays === 1) streak++; else break;
+                }
+                return streak;
+            },
+
+            calculateTotalScore: function(logs, khatamPage) {
+                // Scoring: Fast=50, Prayer=10, Sadaqah=20, Quran=20, Translation=15, Page=2
+                let score = 0;
+                logs.forEach(l => {
+                    if (l.fasted) score += 50;
+                    score += (l.prayers.length * 10);
+                    if (l.sadaqah) score += 20;
+                    if (l.quran) score += 20;
+                    if (l.quran && l.quran.translation) score += 15;
+                });
+                score += (parseInt(khatamPage) * 2);
+                return score;
+            },
+
+            submitLog: function() {
+                const date = document.getElementById('logDate').value;
+                if(!date) return alert("Please select a date.");
+                const fasted = document.getElementById('checkFast').checked;
+                const sadaqah = document.getElementById('checkSadaqah').checked;
+                const prayers = [];
+                document.querySelectorAll('.prayer-check:checked').forEach(cb => prayers.push(cb.value));
+                let quranData = null;
+                if (this.state.quranActive) {
+                    let surah = document.getElementById('surahSelect').value;
+                    const verses = document.getElementById('versesCount').value;
+                    const time = document.getElementById('readTime').value;
+                    const translation = document.getElementById('checkTranslation').checked;
+                    const reflection = document.getElementById('reflectionInput').value.trim();
+                    
+                    if(surah === 'Other') {
+                        surah = document.getElementById('customSurahInput').value.trim();
+                        if(!surah) return alert("Please type the name of the Surah.");
+                    }
+
+                    if (!surah && (!verses || verses == 0)) return alert("Please specify Surah or Pages.");
+                    if (translation && reflection.length < 10) return alert("Please write a short reflection (min 10 chars).");
+                    quranData = { surah, verses, time, translation, reflection };
+                }
+                const entry = { id: Date.now(), date, fasted, sadaqah, prayers, quran: quranData };
+                this.state.logs = this.state.logs.filter(l => l.date !== date);
+                this.state.logs.unshift(entry);
+                this.state.logs.sort((a,b) => new Date(b.date) - new Date(a.date));
+                try { localStorage.setItem('ashes_logs', JSON.stringify(this.state.logs)); } catch(e) {}
+                this.closeLogger();
+                this.renderDashboard();
+                this.renderLogs();
+                this.showToast("Progress Saved!");
+            },
+
+            renderDashboard: function() {
+                const totalFasts = this.state.logs.filter(l => l.fasted).length;
+                let totalPossiblePrayers = this.state.logs.length * 5;
+                let actualPrayers = 0;
+                this.state.logs.forEach(l => actualPrayers += l.prayers.length);
+                const salahPercentage = totalPossiblePrayers > 0 ? Math.round((actualPrayers / totalPossiblePrayers) * 100) : 0;
+                const streak = this.calculateStreak(this.state.logs);
+                const score = this.calculateTotalScore(this.state.logs, this.state.khatamPage);
+                document.getElementById('statFasts').innerText = totalFasts;
+                document.getElementById('statSalah').innerText = `${salahPercentage}%`;
+                document.getElementById('statStreak').innerText = streak;
+                document.getElementById('statPoints').innerText = score.toLocaleString();
+            },
+
+            renderLogs: function() {
+                const container = document.getElementById('logsContainer');
+                container.innerHTML = '';
+                if (this.state.logs.length === 0) {
+                    container.innerHTML = `<div class="glass-panel p-8 rounded-xl text-center border-dashed border border-gray-800 opacity-60"><i class="fas fa-scroll text-4xl text-gray-700 mb-3"></i><p class="text-gray-500 text-sm">Your legacy begins with the first log.</p></div>`;
+                    return;
+                }
+                this.state.logs.forEach(log => {
+                    const dateObj = new Date(log.date);
+                    const day = dateObj.getDate();
+                    const month = dateObj.toLocaleString('default', {month: 'short'});
+                    const quranBadge = log.quran ? `<div class="flex items-center gap-1 text-[10px] text-gold-400 bg-gold-900/20 px-2 py-1 rounded border border-gold-600/20"><i class="fas fa-quran"></i> ${log.quran.surah || 'Read'}</div>` : '';
+                    const sadaqahBadge = log.sadaqah ? `<div class="flex items-center gap-1 text-[10px] text-emerald-400 bg-emerald-900/20 px-2 py-1 rounded border border-emerald-600/20"><i class="fas fa-hand-holding-heart"></i> Charity</div>` : '';
+                    const prayerCount = log.prayers.length;
+                    const prayerColor = prayerCount === 5 ? 'text-emerald-400' : 'text-gray-500';
+                    const html = `
+                    <div class="glass-panel p-4 rounded-xl border-l-2 ${log.fasted ? 'border-l-gold-500' : 'border-l-gray-700'} flex flex-col gap-2 transition-all hover:bg-ashes-800/40 group">
+                        <div class="flex justify-between items-start">
+                            <div class="flex items-center gap-4">
+                                <div class="bg-ashes-900/80 w-12 h-12 rounded-lg flex flex-col items-center justify-center border border-gray-800 shadow-inner"><span class="text-[9px] text-gray-500 uppercase font-bold tracking-wider">${month}</span><span class="text-xl font-bold text-white leading-none font-serif">${day}</span></div>
+                                <div>
+                                    <div class="flex gap-2 mb-1 items-center flex-wrap">
+                                        ${log.fasted ? '<span class="text-[9px] font-bold bg-emerald-900/30 text-emerald-400 px-2 py-0.5 rounded border border-emerald-900/50">FASTED</span>' : '<span class="text-[9px] font-bold bg-gray-800 text-gray-500 px-2 py-0.5 rounded">NOT FASTED</span>'}
+                                        ${quranBadge}
+                                        ${sadaqahBadge}
+                                    </div>
+                                    <div class="${prayerColor} text-xs font-bold flex items-center gap-1.5"><i class="fas fa-pray"></i> ${prayerCount}/5 Prayers</div>
+                                </div>
+                            </div>
+                            <button onclick="app.deleteLog(${log.id})" class="text-gray-700 hover:text-red-500 transition-colors p-2 opacity-0 group-hover:opacity-100"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                        ${log.quran && log.quran.reflection ? `<div class="mt-2 pl-3 border-l border-gray-700"><p class="text-[9px] text-gold-600 uppercase font-bold mb-0.5 tracking-wider">Reflection</p><p class="text-xs text-gray-300 italic line-clamp-2">"${log.quran.reflection}"</p></div>` : ''}
+                    </div>`;
+                    container.insertAdjacentHTML('beforeend', html);
+                });
+            },
+            showToast: function(msg) {
+                const toast = document.getElementById('toast');
+                document.getElementById('toastMsg').innerText = msg;
+                toast.classList.remove('translate-x-full');
+                setTimeout(() => { toast.classList.add('translate-x-full'); }, 3000);
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => { app.init(); });
+    </script>
+</body>
+</html>
