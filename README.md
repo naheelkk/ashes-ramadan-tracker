@@ -4,7 +4,8 @@
 
 A premium, privacy-focused progressive web application designed to help members of Team Ashes track their spiritual habits, Quran recitation, and fasting consistency during the holy month of Ramadan and beyond.
 
-(Replace this link with a screenshot of your actual app once deployed)
+<img width="1062" height="897" alt="image" src="https://github.com/user-attachments/assets/84bc907b-902b-4024-9a54-f1a9534cea3a" />
+
 
 ✨ Features
 
