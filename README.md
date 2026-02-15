@@ -2,109 +2,110 @@
 
 "Steadfast in faith, united in purpose."
 
-A premium, privacy-focused progressive web application designed to help members of Team Ashes track their spiritual habits, Quran recitation, and fasting consistency during the holy month of Ramadan and beyond.
+A premium, multiplayer progressive web application designed to help Team Ashes track spiritual habits, Quran recitation, and fasting consistency during the holy month of Ramadan. Built with a "Privacy First" approach using Firebase Anonymous Authentication.
 
 <img width="1062" height="897" alt="image" src="https://github.com/user-attachments/assets/84bc907b-902b-4024-9a54-f1a9534cea3a" />
-
 
 ✨ Features
 
 📊 Daily Accountability
 
-Obligations: Track Fasting status and the 5 Daily Prayers (Farz).
+Obligations: Track Fasting status, Charity (Sadaqah), and the 5 Daily Prayers.
 
-Sadaqah (Charity): specific toggle to encourage daily charity.
+Smart Scoring: Earn points for consistency to climb the team leaderboard.
 
-Smart Scoring: Earn points for consistency to stay motivated.
-
-Streak Logic: Intelligent streak calculation based on actual calendar dates.
+Streak Logic: Intelligent streak calculation based on calendar dates.
 
 📖 Quran Companion
 
-Khatam Tracker: Visual progress bar tracking your journey through the 604 pages of the Quran.
+Khatam Tracker: Visual progress bar for the 604 pages of the Quran.
 
-Detailed Logging: Select from all 114 Surahs (with search/dropdown) or log specific pages.
+Surah Logging: Select from all 114 Surahs or log specific pages.
 
-Reflection Mode: "Trust but Verify" system—if you read the translation/Tafseer, the app prompts you to write a brief reflection on what you learned.
+Verification: "Trust but Verify" system—requires a written reflection if you read the translation to claim points.
+
+🏆 Multiplayer Leaderboard
+
+Real-time Updates: See team scores update instantly.
+
+Live Rankings: Compete for the top spot in Fasting counts and Total Score.
+
+Anonymous Profiles: No email/password required. Accounts are tied to the device.
 
 📿 Spiritual Tools
 
-Digital Tasbih: Integrated counter with satisfying click animation and haptic feedback (on supported devices).
+Digital Tasbih: Integrated counter with haptic feedback.
 
-Essential Duas: Quick-access library for Iftar, Suhoor, Ashras, and Laylatul Qadr supplications.
+Essential Duas: Library for Iftar, Suhoor, Ashras, and Laylatul Qadr.
 
-Daily Verse: A rotating selection of inspiring Quranic Ayahs on the dashboard.
+Daily Verse: Rotating inspiring Quranic Ayahs.
 
-🎨 Premium Experience
+🚀 Setup Guide
 
-Dark/Gold Aesthetic: A beautiful, battery-friendly dark mode with Islamic geometric patterns and glassmorphism effects.
+This app is a Single-File Application (SPA) powered by Firebase.
 
-Privacy First: No Database Required. All data is stored locally on the user's device (localStorage). Your data never leaves your phone.
+1. Prerequisite: Firebase
 
-Responsive: Works perfectly on Mobile, Tablet, and Desktop.
+You need a free Firebase project to store the data.
 
-🚀 Quick Start
+Go to console.firebase.google.com.
 
-This is a Single-File Application. There is no build process, no npm install, and no backend configuration required.
+Create a new project.
 
-To Run Locally:
+Enable Database: Build > Firestore Database > Create > Start in Test Mode.
 
-Download the ashes_ramadan_tracker.html file.
+Enable Auth: Build > Authentication > Sign-in method > Anonymous > Enable.
 
-Double-click it to open it in Chrome, Safari, or Edge.
+Get Config: Project Settings > General > Your Apps > Web (</>) > Register App.
 
-Done!
+Copy the firebaseConfig object.
 
-To Deploy (Free):
+2. Configure the App
 
-You can host this for free on GitHub Pages or Netlify:
+Open index.html and look for lines ~30-40:
 
-GitHub Pages:
+const firebaseConfig = {
+    apiKey: "PASTE_YOUR_API_KEY",
+    authDomain: "...",
+    projectId: "...",
+    // ... rest of your config
+};
 
-Upload ashes_ramadan_tracker.html to your repo.
 
-Rename it to index.html.
+Paste your keys there.
 
-Go to Repo Settings -> Pages -> Select "main" branch -> Save.
+3. Database Rules (Critical!)
 
-Netlify Drop:
+To allow the app to write data, update your Firestore Rules in the Firebase Console:
 
-Drag and drop the folder containing the file onto Netlify Drop.
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}
 
-🛠️ Customization
 
-Want to make it your own? Search for these terms in the code to customize:
+🌐 Deployment (GitHub Pages)
 
-Logo: Search for <!-- LOGO PLACEHOLDER --> to replace the flame icon with your own image <img src="...">.
+Create a new repository on GitHub.
 
-Team Name: Search for "Team Ashes" and replace it with your group's name.
+Upload your index.html file.
 
-Colors: The app uses Tailwind CSS. You can change the primary colors in the tailwind.config script tag at the top of the file (e.g., change gold to blue).
+Go to Settings > Pages.
 
-📱 Tech Stack
+Under Branch, select main and click Save.
 
-HTML5 (Structure)
+Your app will be live at https://yourusername.github.io/repo-name/.
 
-Tailwind CSS (Styling via CDN)
+🎨 Customization
 
-Vanilla JavaScript (Logic & State Management)
+Logo: Search for <!-- LOGO PLACEHOLDER --> in the HTML to replace the flame icon with your own image <img>.
 
-FontAwesome (Icons)
-
-Google Fonts (Typography: Amiri & Reem Kufi)
-
-🤝 Contributing
-
-Feel free to fork this repository and submit pull requests if you want to add features like:
-
-Graph visualization for stats.
-
-Export/Import data (JSON) for backup.
-
-Push notifications.
+Colors: Modify the tailwind.config script at the top of the HTML file to change the Gold/Emerald/Ashes color scheme.
 
 📄 License
 
-This project is open-source and available under the MIT License.
-
-Ramadan Mubarak from Team Ashes! 🌙
+This project is open-source. Feel free to modify it for your own team or community.
