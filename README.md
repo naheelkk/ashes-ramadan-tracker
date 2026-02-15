@@ -4,7 +4,8 @@
 
 A premium, multiplayer progressive web application designed to help Team Ashes track spiritual habits, Quran recitation, and fasting consistency during the holy month of Ramadan. Built with a "Privacy First" approach using Firebase Anonymous Authentication.
 
-<img width="1062" height="897" alt="image" src="https://github.com/user-attachments/assets/84bc907b-902b-4024-9a54-f1a9534cea3a" />
+![WhatsApp Image 2026-02-15 at 4 33 29 PM](https://github.com/user-attachments/assets/13058276-4b2b-475d-b858-2f44db774166)
+
 
 ✨ Features
 
