@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Team Ashes | Ramadan Tracker</title>
+    <title>Ashes | Ramadan Tracker</title>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌙</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -37,6 +37,8 @@
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
+        
+        /* Range Slider Styling */
         input[type=range] { -webkit-appearance: none; background: transparent; }
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none; height: 24px; width: 24px; border-radius: 50%;
@@ -44,8 +46,10 @@
             cursor: pointer; margin-top: -10px;
             box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
             border: 2px solid #141414;
+            position: relative; z-index: 20;
         }
         input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: #262626; border-radius: 2px; }
+        
         .fade-in { animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         .divider-icon::before { content: "۞"; font-family: 'Amiri', serif; color: #d97706; font-size: 1.5rem; }
@@ -61,16 +65,11 @@
     <div id="authScreen" class="relative z-10 flex flex-col items-center justify-center min-h-screen p-6">
         <div class="glass-panel p-10 rounded-[2rem] shadow-2xl max-w-sm w-full text-center border-t border-gold-500/10 gold-glow">
             <div class="mb-10 relative">
-                
-                <!-- Improved Logo Container -->
-                <div class="w-32 h-32 mx-auto rounded-full border-2 border-gold-500/30 flex items-center justify-center relative mb-6 shadow-[0_0_40px_rgba(217,119,6,0.2)] bg-black overflow-hidden group">
-                    <img src="1000160425.png" style="background-color:darkgoldenrod" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Ashes Logo">
-                    <!-- Spinning Border Overlay -->
+                <div class="w-32 h-32 mx-auto rounded-full border-2 border-gold-500/30 bg-black flex items-center justify-center relative mb-6 shadow-[0_0_40px_rgba(217,119,6,0.2)] overflow-hidden group">
+                     <img src="1000160425.png" style="background-color:darkgoldenrod" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Ashes Logo">
                     <div class="absolute inset-0 rounded-full border border-dashed border-gold-400/40 animate-spin-slow pointer-events-none"></div>
                 </div>
-                
-                <p class="font-arabic text-3xl text-gold-500/80 mb-2">بِسْمِ ٱللَّٰهِ</p>
-                <h1 class="text-5xl font-serif font-bold text-gold-500 tracking-[0.2em] drop-shadow-md" style="text-shadow: 0 4px 20px rgba(0,0,0,0.8);">ASHES</h1>
+                <h1 class="text-6xl font-serif font-bold text-gold-500 tracking-[0.2em] drop-shadow-lg" style="text-shadow: 0 2px 10px rgba(0,0,0,0.5);">ASHES</h1>
                 <div class="flex items-center gap-2 justify-center mt-4 opacity-50">
                     <div class="h-px w-8 bg-gold-600"></div>
                     <span class="text-gold-600 text-xs">۞</span>
@@ -78,7 +77,6 @@
                 </div>
                 <p class="text-gray-500 text-[10px] tracking-[0.4em] uppercase mt-2">Ramadan Legacy Tracker</p>
             </div>
-            
             <div class="space-y-5">
                 <div class="relative group">
                     <input type="text" id="usernameInput" placeholder="Enter Your Identity" class="w-full bg-ashes-900/60 border border-gray-800 rounded-xl px-5 py-4 text-white focus:border-gold-600/50 outline-none text-center transition-all placeholder-gray-700 font-serif tracking-wide">
@@ -95,9 +93,8 @@
         <header class="bg-ashes-950/80 backdrop-blur-xl border-b border-gray-800/50 sticky top-0 z-40 shadow-2xl">
             <div class="max-w-4xl mx-auto px-5 py-4 flex justify-between items-center">
                 <div class="flex items-center gap-4">
-                    <!-- Improved Header Logo -->
-                    <div class="w-10 h-10 rounded-full border border-gold-500/30 overflow-hidden shadow-md bg-black">
-                        <img src="1000160425.png" style="background-color:darkgoldenrod" class="w-full h-full object-cover" alt="Ashes Logo">
+                    <div class="w-10 h-10 bg-black rounded-full flex items-center justify-center border border-gold-600/30 shadow-inner overflow-hidden">
+                        <img src="1000160425.png" style="background-color:darkgoldenrod" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Ashes Logo">
                     </div>
                     <div>
                         <h2 class="font-bold text-white leading-none tracking-[0.2em] font-serif text-lg">ASHES</h2>
@@ -105,6 +102,7 @@
                     </div>
                 </div>
                 <div class="flex gap-2">
+                    <button id="btnLinkGoogle" onclick="app.linkGoogle()" class="hidden text-gray-500 hover:text-white bg-ashes-800/50 hover:bg-ashes-800 p-2.5 rounded-xl transition-all border border-transparent hover:border-blue-500/30"><i class="fab fa-google"></i></button>
                     <button onclick="app.scrollToSection('leaderboardSection')" class="text-gray-500 hover:text-gold-400 bg-ashes-800/50 hover:bg-ashes-800 p-2.5 rounded-xl transition-all border border-transparent hover:border-gold-600/10"><i class="fas fa-trophy"></i></button>
                     <button onclick="app.logout()" class="text-gray-500 hover:text-red-400 bg-ashes-800/50 hover:bg-ashes-800 p-2.5 rounded-xl transition-all border border-transparent hover:border-red-900/20"><i class="fas fa-power-off"></i></button>
                 </div>
@@ -130,22 +128,10 @@
             </div>
 
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                <div class="glass-panel p-5 rounded-2xl text-center hover:bg-ashes-800/40 transition-colors group">
-                    <p class="text-3xl font-bold text-white mb-1 group-hover:text-gold-400 transition-colors" id="statFasts">0</p>
-                    <p class="text-[9px] text-gray-500 uppercase tracking-widest font-bold">Fasts</p>
-                </div>
-                <div class="glass-panel p-5 rounded-2xl text-center hover:bg-ashes-800/40 transition-colors group">
-                    <p class="text-3xl font-bold text-emerald-500 mb-1" id="statSalah">0%</p>
-                    <p class="text-[9px] text-gray-500 uppercase tracking-widest font-bold">Salah</p>
-                </div>
-                <div class="glass-panel p-5 rounded-2xl text-center hover:bg-ashes-800/40 transition-colors">
-                    <p class="text-3xl font-bold text-orange-400 mb-1 flex justify-center items-center gap-1"><span id="statStreak">0</span><span class="text-base opacity-70">🔥</span></p>
-                    <p class="text-[9px] text-gray-500 uppercase tracking-widest font-bold">Streak</p>
-                </div>
-                <div class="glass-panel p-5 rounded-2xl text-center hover:bg-ashes-800/40 transition-colors bg-gradient-to-b from-ashes-800/50 to-transparent">
-                    <p class="text-3xl font-bold text-gold-500 mb-1 font-mono" id="statPoints">0</p>
-                    <p class="text-[9px] text-gray-500 uppercase tracking-widest font-bold">Score</p>
-                </div>
+                <div class="glass-panel p-5 rounded-2xl text-center hover:bg-ashes-800/40 transition-colors group"><p class="text-3xl font-bold text-white mb-1 group-hover:text-gold-400 transition-colors" id="statFasts">0</p><p class="text-[9px] text-gray-500 uppercase tracking-widest font-bold">Fasts</p></div>
+                <div class="glass-panel p-5 rounded-2xl text-center hover:bg-ashes-800/40 transition-colors group"><p class="text-3xl font-bold text-emerald-500 mb-1" id="statSalah">0%</p><p class="text-[9px] text-gray-500 uppercase tracking-widest font-bold">Salah</p></div>
+                <div class="glass-panel p-5 rounded-2xl text-center hover:bg-ashes-800/40 transition-colors"><p class="text-3xl font-bold text-orange-400 mb-1 flex justify-center items-center gap-1"><span id="statStreak">0</span><span class="text-base opacity-70">🔥</span></p><p class="text-[9px] text-gray-500 uppercase tracking-widest font-bold">Streak</p></div>
+                <div class="glass-panel p-5 rounded-2xl text-center hover:bg-ashes-800/40 transition-colors bg-gradient-to-b from-ashes-800/50 to-transparent"><p class="text-3xl font-bold text-gold-500 mb-1 font-mono" id="statPoints">0</p><p class="text-[9px] text-gray-500 uppercase tracking-widest font-bold">Score</p></div>
             </div>
 
             <button onclick="app.openLogger()" class="w-full bg-gradient-to-r from-ashes-800 to-ashes-900 border border-gold-600/20 hover:border-gold-500/50 p-6 rounded-[1.5rem] flex items-center justify-between group transition-all shadow-xl hover:shadow-gold-900/10 active:scale-[0.99]">
@@ -153,26 +139,17 @@
                     <h3 class="text-xl font-serif font-bold text-white group-hover:text-gold-400 transition-colors">Log Daily Progress</h3>
                     <p class="text-xs text-gray-500 mt-1 uppercase tracking-wider">Record Salah, Fasting, Quran</p>
                 </div>
-                <div class="w-14 h-14 bg-gradient-to-br from-gold-600 to-gold-800 rounded-full flex items-center justify-center text-black shadow-lg group-hover:scale-110 transition-transform relative z-10 group-hover:rotate-90 duration-300 border border-gold-400/20">
-                    <i class="fas fa-plus text-xl text-white"></i>
-                </div>
+                <div class="w-14 h-14 bg-gradient-to-br from-gold-600 to-gold-800 rounded-full flex items-center justify-center text-black shadow-lg group-hover:scale-110 transition-transform relative z-10 group-hover:rotate-90 duration-300 border border-gold-400/20"><i class="fas fa-plus text-xl text-white"></i></div>
             </button>
 
             <div class="grid grid-cols-2 gap-4">
-                <button onclick="app.openTasbih()" class="glass-panel p-6 rounded-2xl flex flex-col items-center justify-center gap-3 group hover:bg-ashes-800/60 transition-all border border-transparent hover:border-gold-600/20">
-                    <i class="fas fa-fingerprint text-3xl text-gold-500 group-hover:scale-110 transition-transform"></i>
-                    <p class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Tasbih</p>
-                </button>
-                <button onclick="app.openDuas()" class="glass-panel p-6 rounded-2xl flex flex-col items-center justify-center gap-3 group hover:bg-ashes-800/60 transition-all border border-transparent hover:border-emerald-500/20">
-                    <i class="fas fa-praying-hands text-3xl text-emerald-500 group-hover:scale-110 transition-transform"></i>
-                    <p class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Duas</p>
-                </button>
+                <button onclick="app.openTasbih()" class="glass-panel p-6 rounded-2xl flex flex-col items-center justify-center gap-3 group hover:bg-ashes-800/60 transition-all border border-transparent hover:border-gold-600/20"><i class="fas fa-fingerprint text-3xl text-gold-500 group-hover:scale-110 transition-transform"></i><p class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Tasbih</p></button>
+                <button onclick="app.openDuas()" class="glass-panel p-6 rounded-2xl flex flex-col items-center justify-center gap-3 group hover:bg-ashes-800/60 transition-all border border-transparent hover:border-emerald-500/20"><i class="fas fa-praying-hands text-3xl text-emerald-500 group-hover:scale-110 transition-transform"></i><p class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Duas</p></button>
             </div>
 
+            <!-- Khatam Tracker -->
             <div class="glass-panel p-8 rounded-[2rem] border border-gray-800 relative overflow-hidden">
-                <div class="absolute right-0 top-0 opacity-5 transform translate-x-1/3 -translate-y-1/3 pointer-events-none">
-                    <i class="fas fa-quran text-9xl text-white"></i>
-                </div>
+                <div class="absolute right-0 top-0 opacity-5 transform translate-x-1/3 -translate-y-1/3 pointer-events-none"><i class="fas fa-quran text-9xl text-white"></i></div>
                 <div class="flex justify-between items-end mb-6 relative z-10">
                     <div>
                         <h3 class="text-gold-500 font-bold text-lg flex items-center gap-2"><i class="fas fa-book-open text-xs"></i> Khatam Tracker</h3>
@@ -186,11 +163,18 @@
                 <div class="relative h-3 bg-black/60 rounded-full overflow-hidden mb-8 border border-gray-700/50 shadow-inner">
                     <div id="khatamBar" class="absolute top-0 left-0 h-full bg-gradient-to-r from-emerald-900 via-emerald-600 to-emerald-400 transition-all duration-1000 shadow-[0_0_15px_rgba(16,185,129,0.3)]" style="width: 0%"></div>
                 </div>
-                <div class="flex items-center gap-4 bg-ashes-950/80 p-4 rounded-2xl border border-gray-800/50">
-                    <span class="text-[10px] text-gray-500 font-bold uppercase w-8 text-center">1</span>
-                    <input type="range" min="0" max="604" value="0" id="khatamSlider" class="w-full" oninput="app.handleKhatamSlide(this.value)">
-                    <span class="text-[10px] text-gray-500 font-bold uppercase w-8 text-center">604</span>
+
+                <!-- Slider with Buttons -->
+                <div class="flex items-center gap-3 bg-ashes-950/80 p-3 rounded-2xl border border-gray-800/50">
+                    <button onclick="app.adjustKhatam(-1)" class="w-10 h-10 rounded-xl bg-ashes-800 hover:bg-ashes-700 text-gold-500 border border-gray-700 flex items-center justify-center transition-colors active:scale-95"><i class="fas fa-minus text-xs"></i></button>
+                    <div class="flex-1 relative h-6 flex items-center">
+                        <input type="range" min="0" max="604" value="0" id="khatamSlider" class="w-full h-full absolute inset-0 z-20 opacity-0 cursor-pointer" oninput="app.handleKhatamSlide(this.value)">
+                        <div class="w-full h-1 bg-gray-800 rounded-full overflow-hidden relative z-10"><div id="khatamTrackFill" class="h-full bg-gold-600 w-0"></div></div>
+                        <div id="khatamThumb" class="absolute h-5 w-5 bg-gold-500 rounded-full border-2 border-ashes-900 shadow-md z-10 pointer-events-none" style="left: 0%; transform: translateX(-50%)"></div>
+                    </div>
+                    <button onclick="app.adjustKhatam(1)" class="w-10 h-10 rounded-xl bg-ashes-800 hover:bg-ashes-700 text-gold-500 border border-gray-700 flex items-center justify-center transition-colors active:scale-95"><i class="fas fa-plus text-xs"></i></button>
                 </div>
+                
                 <div class="flex justify-end mt-4">
                     <button onclick="app.saveKhatam()" class="text-[10px] bg-ashes-800 hover:bg-gold-600 hover:text-black text-gold-500 border border-gold-600/30 px-5 py-2 rounded-lg transition-all font-bold shadow-lg flex items-center gap-2 uppercase tracking-wide">
                         Update Progress <i class="fas fa-check"></i>
@@ -209,16 +193,14 @@
             </div>
 
             <div>
-                <div class="flex justify-between items-center mb-6 px-2">
-                    <div class="flex items-center gap-3 w-full"><div class="divider-line"></div><span class="divider-icon"></span><div class="divider-line"></div></div>
-                </div>
+                <div class="flex justify-between items-center mb-6 px-2"><div class="flex items-center gap-3 w-full"><div class="divider-line"></div><span class="divider-icon"></span><div class="divider-line"></div></div></div>
                 <h3 class="text-center text-gold-500/50 text-[10px] font-bold uppercase tracking-[0.3em] mb-4">Your Journal</h3>
                 <div id="logsContainer" class="space-y-3"></div>
             </div>
         </main>
     </div>
 
-    <!-- Modals -->
+    <!-- Error Modal -->
     <div id="errorModal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4 fade-in">
         <div class="absolute inset-0 bg-black/90 backdrop-blur-md"></div>
         <div class="relative bg-ashes-900 border border-red-500/30 rounded-2xl p-8 max-w-md w-full shadow-2xl">
@@ -228,13 +210,11 @@
         </div>
     </div>
 
+    <!-- Log Modal -->
     <div id="logModal" class="fixed inset-0 z-50 hidden">
         <div class="absolute inset-0 bg-black/95 backdrop-blur-md transition-opacity" onclick="app.closeLogger()"></div>
         <div class="absolute bottom-0 md:top-1/2 md:left-1/2 md:transform md:-translate-x-1/2 md:-translate-y-1/2 md:bottom-auto w-full md:w-[500px] md:rounded-3xl bg-[#080808] border border-gray-800 shadow-2xl flex flex-col max-h-[90vh] animate-fadeIn ring-1 ring-white/5">
-            <div class="p-6 border-b border-gray-800 flex justify-between items-center bg-ashes-900/50 rounded-t-3xl">
-                <div><p class="font-arabic text-gold-500 text-xl">بِسْمِ ٱللَّٰهِ</p><p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Daily Log</p></div>
-                <button onclick="app.closeLogger()" class="text-gray-500 hover:text-white bg-ashes-800 w-8 h-8 rounded-full flex items-center justify-center transition-colors"><i class="fas fa-times"></i></button>
-            </div>
+            <div class="p-6 border-b border-gray-800 flex justify-between items-center bg-ashes-900/50 rounded-t-3xl"><div><p class="font-arabic text-gold-500 text-xl">بِسْمِ ٱللَّٰهِ</p><p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Daily Log</p></div><button onclick="app.closeLogger()" class="text-gray-500 hover:text-white bg-ashes-800 w-8 h-8 rounded-full flex items-center justify-center transition-colors"><i class="fas fa-times"></i></button></div>
             <div class="overflow-y-auto p-6 space-y-8 flex-1 custom-scrollbar">
                 <div><label class="block text-gray-500 text-[9px] uppercase font-bold mb-2 tracking-widest">Date</label><input type="date" id="logDate" class="w-full bg-ashes-900 border border-gray-800 rounded-xl p-4 text-white focus:border-gold-500 outline-none transition-colors appearance-none text-sm"></div>
                 <div class="space-y-4">
@@ -246,11 +226,11 @@
                     <div>
                         <label class="block text-gray-500 text-[9px] uppercase font-bold mb-3 text-center tracking-widest">Prayers (Farz)</label>
                         <div class="grid grid-cols-5 gap-2">
-                            <label class="cursor-pointer group"><input type="checkbox" class="peer sr-only prayer-check" value="Fajr"><div class="h-10 w-full rounded-lg bg-ashes-800 border border-gray-700 flex items-center justify-center text-gray-500 peer-checked:bg-emerald-900/20 peer-checked:border-emerald-500 peer-checked:text-emerald-400 transition-all font-bold text-[9px] uppercase">Fajr</div></label>
-                            <label class="cursor-pointer group"><input type="checkbox" class="peer sr-only prayer-check" value="Dhuhr"><div class="h-10 w-full rounded-lg bg-ashes-800 border border-gray-700 flex items-center justify-center text-gray-500 peer-checked:bg-emerald-900/20 peer-checked:border-emerald-500 peer-checked:text-emerald-400 transition-all font-bold text-[9px] uppercase">Dhuhr</div></label>
-                            <label class="cursor-pointer group"><input type="checkbox" class="peer sr-only prayer-check" value="Asr"><div class="h-10 w-full rounded-lg bg-ashes-800 border border-gray-700 flex items-center justify-center text-gray-500 peer-checked:bg-emerald-900/20 peer-checked:border-emerald-500 peer-checked:text-emerald-400 transition-all font-bold text-[9px] uppercase">Asr</div></label>
-                            <label class="cursor-pointer group"><input type="checkbox" class="peer sr-only prayer-check" value="Maghrib"><div class="h-10 w-full rounded-lg bg-ashes-800 border border-gray-700 flex items-center justify-center text-gray-500 peer-checked:bg-emerald-900/20 peer-checked:border-emerald-500 peer-checked:text-emerald-400 transition-all font-bold text-[9px] uppercase">Mag</div></label>
-                            <label class="cursor-pointer group"><input type="checkbox" class="peer sr-only prayer-check" value="Isha"><div class="h-10 w-full rounded-lg bg-ashes-800 border border-gray-700 flex items-center justify-center text-gray-500 peer-checked:bg-emerald-900/20 peer-checked:border-emerald-500 peer-checked:text-emerald-400 transition-all font-bold text-[9px] uppercase">Isha</div></label>
+                            <label class="cursor-pointer group"><input type="checkbox" class="peer sr-only prayer-check" value="Fajr"><div class="h-12 w-full rounded-xl bg-ashes-800 border border-gray-700 flex items-center justify-center text-gray-500 peer-checked:bg-emerald-900/20 peer-checked:border-emerald-500 peer-checked:text-emerald-400 transition-all font-bold text-[9px] uppercase">Fajr</div></label>
+                            <label class="cursor-pointer group"><input type="checkbox" class="peer sr-only prayer-check" value="Dhuhr"><div class="h-12 w-full rounded-xl bg-ashes-800 border border-gray-700 flex items-center justify-center text-gray-500 peer-checked:bg-emerald-900/20 peer-checked:border-emerald-500 peer-checked:text-emerald-400 transition-all font-bold text-[9px] uppercase">Dhuhr</div></label>
+                            <label class="cursor-pointer group"><input type="checkbox" class="peer sr-only prayer-check" value="Asr"><div class="h-12 w-full rounded-xl bg-ashes-800 border border-gray-700 flex items-center justify-center text-gray-500 peer-checked:bg-emerald-900/20 peer-checked:border-emerald-500 peer-checked:text-emerald-400 transition-all font-bold text-[9px] uppercase">Asr</div></label>
+                            <label class="cursor-pointer group"><input type="checkbox" class="peer sr-only prayer-check" value="Maghrib"><div class="h-12 w-full rounded-xl bg-ashes-800 border border-gray-700 flex items-center justify-center text-gray-500 peer-checked:bg-emerald-900/20 peer-checked:border-emerald-500 peer-checked:text-emerald-400 transition-all font-bold text-[9px] uppercase">Mag</div></label>
+                            <label class="cursor-pointer group"><input type="checkbox" class="peer sr-only prayer-check" value="Isha"><div class="h-12 w-full rounded-xl bg-ashes-800 border border-gray-700 flex items-center justify-center text-gray-500 peer-checked:bg-emerald-900/20 peer-checked:border-emerald-500 peer-checked:text-emerald-400 transition-all font-bold text-[9px] uppercase">Isha</div></label>
                         </div>
                     </div>
                 </div>
@@ -268,25 +248,11 @@
         </div>
     </div>
 
-    <div id="tasbihModal" class="fixed inset-0 z-50 hidden"><div class="absolute inset-0 bg-black/95 backdrop-blur-md" onclick="app.closeTasbih()"></div><div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-sm glass-panel p-8 rounded-3xl border border-gold-600/30 text-center"><h3 class="text-gold-500 font-serif text-2xl font-bold mb-1">Tasbih</h3><div class="bg-black/40 rounded-full w-48 h-48 mx-auto flex items-center justify-center border-4 border-gray-800 mb-6 relative"><span id="tasbihCount" class="text-6xl font-mono font-bold text-white relative z-10">0</span><div class="absolute inset-0 rounded-full border-t-2 border-gold-500/20 animate-spin-slow"></div></div><button onclick="app.tasbihClick()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-4 rounded-xl shadow-lg mb-3 text-lg transition-colors">COUNT</button><button onclick="app.tasbihReset()" class="text-xs text-gray-500 hover:text-red-400 transition-colors">RESET COUNTER</button></div></div>
-    
-    <div id="duasModal" class="fixed inset-0 z-50 hidden"><div class="absolute inset-0 bg-black/95 backdrop-blur-md" onclick="app.closeDuas()"></div><div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md h-[80vh] glass-panel rounded-3xl border border-gray-800 flex flex-col"><div class="p-5 border-b border-gray-800 flex justify-between items-center"><h3 class="text-gold-500 font-serif text-2xl font-bold">Essential Duas</h3><button onclick="app.closeDuas()" class="text-gray-500 hover:text-white"><i class="fas fa-times"></i></button></div><div class="p-6 overflow-y-auto space-y-6 flex-1 custom-scrollbar">
-        <div class="bg-ashes-900/50 p-5 rounded-2xl border border-gold-600/10"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Moon Sighting (Hilal)</p><p class="font-arabic text-2xl text-right mb-3 text-white leading-loose">اللَّهُمَّ أَهِلَّهُ عَلَيْنَا بِالْأَمْنِ وَالْإِيمَانِ، وَالسَّلَامَةِ وَالْإِسْلَامِ، رَبِّي وَرَبُّكَ اللَّهُ</p><p class="text-xs text-gray-400 italic">"O Allah, let this moon appear on us with security and faith; with safety and Islam. (O Moon!) My Lord and your Lord is Allah."</p></div>
-        <div class="bg-ashes-900/50 p-5 rounded-2xl border border-gold-600/10"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Suhoor (Intention)</p><p class="font-arabic text-2xl text-right mb-3 text-white leading-loose">وَبِصَوْمِ غَدٍ نَّوَيْتُ مِنْ شَهْرِ رَمَضَانَ</p><p class="text-xs text-gray-400 italic">"I intend to keep the fast for tomorrow in the month of Ramadan."</p></div>
-        <div class="bg-ashes-900/50 p-5 rounded-2xl border border-gold-600/10"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Iftar (Breaking Fast)</p><p class="font-arabic text-2xl text-right mb-3 text-white leading-loose">اللَّهُمَّ لَكَ صُمْتُ وَعَلَى رِزْقِكَ أَفْطَرْتُ</p><p class="text-xs text-gray-400 italic">"O Allah, I fasted for You and I break my fast with Your sustenance."</p></div>
-        <div class="bg-ashes-900/50 p-5 rounded-2xl border border-gold-600/10"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Iftar (As a Guest)</p><p class="font-arabic text-2xl text-right mb-3 text-white leading-loose">أَفْطَرَ عِنْدَكُمُ الصَّائِمُونَ، وَأَكَلَ طَعَامَكُمُ الْأَبْرَارُ، وَصَلَّتْ عَلَيْكُمُ الْمَلَائِكَةُ</p><p class="text-xs text-gray-400 italic">"May the fasting people break fasting at your place, and may the pious eat your food, and may the angels pray for you."</p></div>
-        <div class="flex items-center gap-3 justify-center opacity-30 my-2"><div class="h-px w-10 bg-white"></div><span class="text-xs">۞</span><div class="h-px w-10 bg-white"></div></div>
-        <div class="bg-ashes-900/50 p-5 rounded-2xl border border-gold-600/10"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">First Ashra (Mercy)</p><p class="font-arabic text-2xl text-right mb-3 text-white leading-loose">رَبِّ اغْفِرْ وَارْحَمْ وَأَنْتَ خَيْرُ الرَّاحِمِينَ</p><p class="text-xs text-gray-400 italic">"O My Lord, forgive and have mercy, and You are the best of the Merciful."</p></div>
-        <div class="bg-ashes-900/50 p-5 rounded-2xl border border-gold-600/10"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Second Ashra (Forgiveness)</p><p class="font-arabic text-2xl text-right mb-3 text-white leading-loose">أَسْتَغْفِرُ اللَّهَ رَبِّي مِنْ كُلِّ ذَنْبٍ وَأَتُوبُ إِلَيْهِ</p><p class="text-xs text-gray-400 italic">"I seek forgiveness from Allah, my Lord, from every sin, and I turn to Him in repentance."</p></div>
-        <div class="bg-ashes-900/50 p-5 rounded-2xl border border-gold-600/10"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Third Ashra (Protection)</p><p class="font-arabic text-2xl text-right mb-3 text-white leading-loose">اللَّهُمَّ أَجِرْنِي مِنَ النَّارِ</p><p class="text-xs text-gray-400 italic">"O Allah, save me from the Fire."</p></div>
-        <div class="bg-ashes-900/50 p-5 rounded-2xl border border-gold-600/10"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Laylatul Qadr</p><p class="font-arabic text-2xl text-right mb-3 text-white leading-loose">اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي</p><p class="text-xs text-gray-400 italic">"O Allah, You are Forgiving and love forgiveness, so forgive me."</p></div>
-    </div></div></div>
-    
     <div id="toast" class="fixed top-5 right-5 z-50 transform translate-x-full transition-transform duration-300"><div class="bg-ashes-800 border-l-4 border-gold-500 text-white px-6 py-4 rounded-lg shadow-2xl flex items-center border border-gray-700/50"><i class="fas fa-check-circle text-gold-500 mr-3 text-xl"></i><div><h4 class="font-bold text-sm text-white">Success</h4><p class="text-xs text-gray-400" id="toastMsg">Action completed</p></div></div></div>
 
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js';
-        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, linkWithPopup } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
         import { getFirestore, collection, doc, addDoc, setDoc, deleteDoc, onSnapshot, query } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
 
         const firebaseConfig = {
@@ -302,17 +268,24 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
         const teamGroupId = 'team-ashes-2025';
+        const googleProvider = new GoogleAuthProvider();
 
-        // Safe DOM updater
         const setText = (id, val) => { const el = document.getElementById(id); if (el) el.innerText = val; };
-        const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
 
         window.app = {
             state: { user: null, logs: [], leaderboard: [], khatamPage: 0, quranActive: false, tasbihCount: 0 },
 
             init: async function() {
                 try { await signInAnonymously(auth); } catch (error) { console.error("Auth Failed", error); }
-                onAuthStateChanged(auth, (user) => { if (user) { this.state.user = user; this.setupRealtimeListeners(user.uid); } });
+                onAuthStateChanged(auth, (user) => { 
+                    if (user) { 
+                        this.state.user = user; 
+                        this.setupRealtimeListeners(user.uid);
+                        // Toggle Google Button
+                        const gBtn = document.getElementById('btnLinkGoogle');
+                        if(gBtn) gBtn.classList.toggle('hidden', !user.isAnonymous);
+                    } 
+                });
                 this.setupUI();
             },
 
@@ -364,6 +337,21 @@
                     else alert(error.message);
                 }
             },
+            
+            linkGoogle: async function() {
+                if(!confirm("Link Google account to save progress?")) return;
+                try {
+                    const result = await linkWithPopup(auth.currentUser, googleProvider);
+                    this.showToast("Account Linked!");
+                    document.getElementById('btnLinkGoogle').classList.add('hidden');
+                } catch (error) {
+                    if (error.code === 'auth/credential-already-in-use') {
+                        alert("Account already linked to another user. Sign out and sign in with Google.");
+                    } else {
+                        alert("Error: " + error.message);
+                    }
+                }
+            },
 
             logout: function() { if(confirm("Log out?")) { auth.signOut(); location.reload(); } },
 
@@ -373,7 +361,7 @@
                     const date = document.getElementById('logDate').value;
                     if(!date) return alert("Select date");
                     const existing = this.state.logs.find(l => l.date === date);
-                    if(existing) { if(!confirm("Overwrite existing log?")) return; await deleteDoc(doc(db, 'artifacts', teamGroupId, 'users', this.state.user.uid, 'logs', existing.id)); }
+                    if(existing) { if(!confirm("Overwrite log?")) return; await deleteDoc(doc(db, 'artifacts', teamGroupId, 'users', this.state.user.uid, 'logs', existing.id)); }
                     
                     const fasted = document.getElementById('checkFast').checked;
                     const sadaqah = document.getElementById('checkSadaqah').checked;
@@ -389,7 +377,7 @@
                         const translation = document.getElementById('checkTranslation').checked;
                         const reflection = document.getElementById('reflectionInput').value.trim();
                         if (!surah && (!verses || verses == 0)) return alert("Please specify Surah or Pages.");
-                        if (translation && reflection.length < 10) return alert("Verification Failed: To claim translation points, you must write a reflection.");
+                        if (translation && reflection.length < 10) return alert("Verification Failed: Write a reflection.");
                         quranData = { surah, verses, time, translation, reflection };
                     }
                     await addDoc(collection(db, 'artifacts', teamGroupId, 'users', this.state.user.uid, 'logs'), { date, fasted, sadaqah, prayers, quran: quranData, timestamp: new Date().toISOString() });
@@ -400,15 +388,33 @@
                 } catch (error) { if (error.code === 'permission-denied') document.getElementById('errorModal').classList.remove('hidden'); else alert(error.message); }
             },
 
-            deleteLog: async function(id) { try { if(!confirm("Delete entry?")) return; await deleteDoc(doc(db, 'artifacts', teamGroupId, 'users', this.state.user.uid, 'logs', id)); const tempLogs = this.state.logs.filter(l => l.id !== id); await this.updateProfile(tempLogs, this.state.khatamPage); this.showToast("Deleted"); } catch (error) { if (error.code === 'permission-denied') document.getElementById('errorModal').classList.remove('hidden'); } },
+            deleteLog: async function(id) { try { if(!confirm("Delete?")) return; await deleteDoc(doc(db, 'artifacts', teamGroupId, 'users', this.state.user.uid, 'logs', id)); const tempLogs = this.state.logs.filter(l => l.id !== id); await this.updateProfile(tempLogs, this.state.khatamPage); this.showToast("Deleted"); } catch (error) { if (error.code === 'permission-denied') document.getElementById('errorModal').classList.remove('hidden'); } },
 
             saveKhatam: async function() { try { const val = document.getElementById('khatamSlider').value; this.state.khatamPage = val; await this.updateProfile(this.state.logs, val); this.showToast("Khatam Updated"); } catch (error) { if (error.code === 'permission-denied') document.getElementById('errorModal').classList.remove('hidden'); } },
             
+            adjustKhatam: function(amount) {
+                const slider = document.getElementById('khatamSlider');
+                let val = parseInt(slider.value) || 0;
+                val = Math.min(604, Math.max(0, val + amount));
+                slider.value = val;
+                this.handleKhatamSlide(val);
+            },
+
             handleKhatamSlide: function(val) {
                 setText('khatamCurrentDisplay', val);
                 const p = Math.round((val/604)*100);
                 setText('khatamPercent', `${p}% Completed`);
-                const bar = document.getElementById('khatamBar'); if(bar) bar.style.width = `${p}%`;
+                
+                const bar = document.getElementById('khatamBar'); 
+                if(bar) bar.style.width = `${p}%`;
+                
+                // Track fill visual update
+                const trackFill = document.getElementById('khatamTrackFill');
+                if(trackFill) trackFill.style.width = `${(val/604)*100}%`;
+                
+                // Thumb position visual update
+                const thumb = document.getElementById('khatamThumb');
+                if(thumb) thumb.style.left = `${(val/604)*100}%`;
             },
 
             updateProfile: async function(logs, khatam) {
@@ -448,7 +454,6 @@
                 const logDate = document.getElementById('logDate');
                 if(logDate) logDate.value = new Date().toISOString().split('T')[0];
                 
-                // Expanded Verse List
                 const vs = [ 
                     { ar: "فَإِنَّ مَعَ ٱلْعُسْرِ يُسْرًا", en: "For indeed, with hardship [will be] ease. (94:5)" },
                     { ar: "ٱللَّهُ نُورُ ٱلسَّمَٰوَٰتِ وَٱلْأَرْضِ", en: "Allah is the Light of the heavens and the earth. (24:35)" },
@@ -465,8 +470,8 @@
                     { ar: "إِنَّ ٱللَّهَ يُحِبُّ ٱلْمُتَوَكِّلِينَ", en: "Indeed, Allah loves those who rely [upon Him]. (3:159)" }
                 ];
                 const r = vs[Math.floor(Math.random()*vs.length)];
-                const dailyAr = document.getElementById('dailyArabic'); if(dailyAr) dailyAr.innerText = r.ar;
-                const dailyEn = document.getElementById('dailyEnglish'); if(dailyEn) dailyEn.innerText = r.en;
+                setText('dailyArabic', r.ar);
+                setText('dailyEnglish', r.en);
 
                 s.addEventListener('change', (e) => {
                     const customContainer = document.getElementById('customSurahContainer');
@@ -482,11 +487,20 @@
 
             updateKhatamVisuals: function(val) {
                 if (val === undefined) val = this.state.khatamPage;
-                const disp = document.getElementById('khatamCurrentDisplay'); if(disp) disp.innerText = val;
+                setText('khatamCurrentDisplay', val);
                 const slider = document.getElementById('khatamSlider'); if(slider) slider.value = val;
+                
                 const p = Math.round((val/604)*100);
-                const perc = document.getElementById('khatamPercent'); if(perc) perc.innerText = `${p}% Completed`;
-                const bar = document.getElementById('khatamBar'); if(bar) bar.style.width = `${p}%`;
+                setText('khatamPercent', `${p}% Completed`);
+                
+                const bar = document.getElementById('khatamBar'); 
+                if(bar) bar.style.width = `${p}%`;
+                
+                const trackFill = document.getElementById('khatamTrackFill');
+                if(trackFill) trackFill.style.width = `${p}%`;
+                
+                const thumb = document.getElementById('khatamThumb');
+                if(thumb) thumb.style.left = `${p}%`;
             },
 
             renderDashboard: function() {
@@ -498,10 +512,10 @@
                 const myProfile = this.state.leaderboard.find(p => p.uid === this.state.user?.uid);
                 const score = myProfile ? myProfile.score : 0;
 
-                const elFasts = document.getElementById('statFasts'); if(elFasts) elFasts.innerText = fasts;
-                const elSalah = document.getElementById('statSalah'); if(elSalah) elSalah.innerText = `${sp}%`;
-                const elStreak = document.getElementById('statStreak'); if(elStreak) elStreak.innerText = streak;
-                const elPoints = document.getElementById('statPoints'); if(elPoints) elPoints.innerText = score.toLocaleString();
+                setText('statFasts', fasts);
+                setText('statSalah', `${sp}%`);
+                setText('statStreak', streak);
+                setText('statPoints', score.toLocaleString());
             },
 
             renderLeaderboard: function() {
