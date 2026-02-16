@@ -211,27 +211,53 @@
         </div>
     </div>
 
-    <!-- Duas Modal (Correctly Placed) -->
-    <div id="duasModal" class="fixed inset-0 z-50 hidden">
-        <div class="absolute inset-0 bg-black/95 backdrop-blur-md" onclick="app.closeDuas()"></div>
-        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md h-[80vh] glass-panel rounded-3xl border border-gray-800 flex flex-col animate-fadeIn">
-            <div class="p-5 border-b border-gray-800 flex justify-between items-center bg-ashes-900/50">
-                <h3 class="text-gold-500 font-serif text-2xl font-bold">Essential Duas</h3>
-                <button onclick="app.closeDuas()" class="text-gray-500 hover:text-white"><i class="fas fa-times"></i></button>
+    <!-- Modals (Duas/Tasbih) -->
+    <div id="tasbihModal" class="fixed inset-0 z-50 hidden"><div class="absolute inset-0 bg-black/95 backdrop-blur-md" onclick="app.closeTasbih()"></div><div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-sm glass-panel p-8 rounded-3xl border border-gold-600/30 text-center"><h3 class="text-gold-500 font-serif text-2xl font-bold mb-1">Tasbih</h3><div class="bg-black/40 rounded-full w-48 h-48 mx-auto flex items-center justify-center border-4 border-gray-800 mb-6 relative"><span id="tasbihCount" class="text-6xl font-mono font-bold text-white relative z-10">0</span><div class="absolute inset-0 rounded-full border-t-2 border-gold-500/20 animate-spin-slow"></div></div><button onclick="app.tasbihClick()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-4 rounded-xl shadow-lg mb-3 text-lg transition-colors">COUNT</button><button onclick="app.tasbihReset()" class="text-xs text-gray-500 hover:text-red-400 transition-colors">RESET COUNTER</button></div></div>
+    <div id="duasModal" class="fixed inset-0 z-50 hidden"><div class="absolute inset-0 bg-black/95 backdrop-blur-md" onclick="app.closeDuas()"></div><div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md h-[80vh] glass-panel rounded-3xl border border-gray-800 flex flex-col"><div class="p-5 border-b border-gray-800 flex justify-between items-center"><h3 class="text-gold-500 font-serif text-2xl font-bold">Essential Duas</h3><button onclick="app.closeDuas()" class="text-gray-500 hover:text-white"><i class="fas fa-times"></i></button></div><div class="p-6 overflow-y-auto space-y-6 flex-1 custom-scrollbar">
+        <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Moon Sighting (Hilal)</p><p class="font-arabic text-xl text-right mb-2 leading-loose">اللَّهُمَّ أَهِلَّهُ عَلَيْنَا بِالْأَمْنِ وَالْإِيمَانِ، وَالسَّلَامَةِ وَالْإِسْلَامِ، رَبِّي وَرَبُّكَ اللَّهُ</p><p class="text-xs text-gray-400 italic">"O Allah, let this moon appear on us with security and faith; with safety and Islam. (O Moon!) My Lord and your Lord is Allah."</p></div>
+        <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Suhoor (Intention)</p><p class="font-arabic text-xl text-right mb-2 leading-loose">وَبِصَوْمِ غَدٍ نَّوَيْتُ مِنْ شَهْرِ رَمَضَانَ</p><p class="text-xs text-gray-400 italic">"I intend to keep the fast for tomorrow in the month of Ramadan."</p></div>
+        <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Iftar (Breaking Fast)</p><p class="font-arabic text-xl text-right mb-2 leading-loose">اللَّهُمَّ لَكَ صُمْتُ وَعَلَى رِزْقِكَ أَفْطَرْتُ</p><p class="text-xs text-gray-400 italic">"O Allah, I fasted for You and I break my fast with Your sustenance."</p></div>
+        <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Iftar (As Guest)</p><p class="font-arabic text-xl text-right mb-2 leading-loose">أَفْطَرَ عِنْدَكُمُ الصَّائِمُونَ، وَأَكَلَ طَعَامَكُمُ الْأَبْرَارُ، وَصَلَّتْ عَلَيْكُمُ الْمَلَائِكَةُ</p><p class="text-xs text-gray-400 italic">"May the fasting people break fasting at your place, and may the pious eat your food, and may the angels pray for you."</p></div>
+        
+        <div class="flex items-center gap-3 justify-center opacity-30 my-2"><div class="h-px w-10 bg-white"></div><span class="text-xs">۞</span><div class="h-px w-10 bg-white"></div></div>
+        
+        <!-- First 10 Days -->
+        <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50">
+            <p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">First 10 Days: Mercy (Rahmah)</p>
+            <p class="font-arabic text-xl text-right mb-2 leading-loose">رَبِّ اغْفِرْ وَارْحَمْ وَأَنْتَ خَيْرُ الرَّاحِمِينَ</p>
+            <p class="text-[10px] text-gray-400 italic mb-2">Rabbighfir warham wa anta khair-ur-raahimeen.</p>
+            <p class="text-[10px] text-gray-300">"My Lord, forgive and have mercy, for You are the Best of those who show mercy".</p>
+            <p class="text-[9px] text-gray-500 mt-2 border-t border-gray-700/30 pt-1">Alt: Ya Hayyu Ya Qayyumu Birahmatika asta-ghee-thu</p>
+        </div>
+
+        <!-- Second 10 Days -->
+        <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50">
+            <p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Second 10 Days: Forgiveness (Maghfirah)</p>
+            <p class="font-arabic text-xl text-right mb-2 leading-loose">اللَّهُمَّ اغْفِرْ لِي ذُنُوبِي يَا رَبَّ الْعَالَمِينَ</p>
+            <p class="text-[10px] text-gray-400 italic mb-2">Allahumma-ghfir lee dhunoobi ya rabbal 'alameen.</p>
+            <p class="text-[10px] text-gray-300">"O Allah, forgive my sins, O Lord of the Worlds."</p>
+            <p class="text-[9px] text-gray-500 mt-2 border-t border-gray-700/30 pt-1">Alt: Astaghfirullahal-ladhi la ilaha illa Huwal-Hayyul-Qayyumu wa atubu ilaih</p>
+        </div>
+
+        <!-- Third 10 Days -->
+        <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50">
+            <p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Third 10 Days: Salvation (Itqun-min-an-Naar)</p>
+            
+            <div class="mb-4 border-b border-gray-700/30 pb-3">
+                <p class="text-[9px] text-emerald-500 font-bold mb-1 uppercase">Laylatul Qadr / Forgiveness</p>
+                <p class="font-arabic text-xl text-right mb-1 leading-loose">اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي</p>
+                <p class="text-[10px] text-gray-400 italic mb-1">Allahumma innaka 'afuwwun, tuhibb al-'afwa, fa'fu 'anni.</p>
+                <p class="text-[10px] text-gray-300">"O Allah, You are the Most Forgiving, and You love to forgive, so forgive me".</p>
             </div>
-            <div class="p-6 overflow-y-auto space-y-6 flex-1 custom-scrollbar">
-                <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Moon Sighting (Hilal)</p><p class="font-arabic text-xl text-right mb-2 leading-loose">اللَّهُمَّ أَهِلَّهُ عَلَيْنَا بِالْأَمْنِ وَالْإِيمَانِ، وَالسَّلَامَةِ وَالْإِسْلَامِ، رَبِّي وَرَبُّكَ اللَّهُ</p><p class="text-xs text-gray-400 italic">"O Allah, let this moon appear on us with security and faith; with safety and Islam. (O Moon!) My Lord and your Lord is Allah."</p></div>
-                <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Suhoor (Intention)</p><p class="font-arabic text-xl text-right mb-2 leading-loose">وَبِصَوْمِ غَدٍ نَّوَيْتُ مِنْ شَهْرِ رَمَضَانَ</p><p class="text-xs text-gray-400 italic">"I intend to keep the fast for tomorrow in the month of Ramadan."</p></div>
-                <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Iftar (Breaking Fast)</p><p class="font-arabic text-xl text-right mb-2 leading-loose">اللَّهُمَّ لَكَ صُمْتُ وَعَلَى رِزْقِكَ أَفْطَرْتُ</p><p class="text-xs text-gray-400 italic">"O Allah, I fasted for You and I break my fast with Your sustenance."</p></div>
-                <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Iftar (As Guest)</p><p class="font-arabic text-xl text-right mb-2 leading-loose">أَفْطَرَ عِنْدَكُمُ الصَّائِمُونَ، وَأَكَلَ طَعَامَكُمُ الْأَبْرَارُ، وَصَلَّتْ عَلَيْكُمُ الْمَلَائِكَةُ</p><p class="text-xs text-gray-400 italic">"May the fasting people break fasting at your place, and may the pious eat your food, and may the angels pray for you."</p></div>
-                <div class="flex items-center gap-3 justify-center opacity-30 my-2"><div class="h-px w-10 bg-white"></div><span class="text-xs">۞</span><div class="h-px w-10 bg-white"></div></div>
-                <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">First Ashra (Mercy)</p><p class="font-arabic text-xl text-right mb-2 leading-loose">رَبِّ اغْفِرْ وَارْحَمْ وَأَنْتَ خَيْرُ الرَّاحِمِينَ</p><p class="text-xs text-gray-400 italic">"O My Lord, forgive and have mercy, and You are the best of the Merciful."</p></div>
-                <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Second Ashra (Forgiveness)</p><p class="font-arabic text-xl text-right mb-2 leading-loose">أَسْتَغْفِرُ اللَّهَ رَبِّي مِنْ كُلِّ ذَنْبٍ وَأَتُوبُ إِلَيْهِ</p><p class="text-xs text-gray-400 italic">"I seek forgiveness from Allah, my Lord, from every sin, and I turn to Him in repentance."</p></div>
-                <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Third Ashra (Protection)</p><p class="font-arabic text-xl text-right mb-2 leading-loose">اللَّهُمَّ أَجِرْنِي مِنَ النَّارِ</p><p class="text-xs text-gray-400 italic">"O Allah, save me from the Fire."</p></div>
-                <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Laylatul Qadr</p><p class="font-arabic text-xl text-right mb-2 leading-loose">اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي</p><p class="text-xs text-gray-400 italic">"O Allah, You are Forgiving and love forgiveness, so forgive me."</p></div>
+
+            <div>
+                <p class="text-[9px] text-emerald-500 font-bold mb-1 uppercase">Protection from Hellfire</p>
+                <p class="font-arabic text-xl text-right mb-1 leading-loose">اللَّهُمَّ إِنِّي أَسْأَلُكَ رِضَاكَ وَالجَنَّةَ ، وَأَعُوذُ بِكَ مِنْ سَخَطِكَ وَالنَّارِ</p>
+                <p class="text-[10px] text-gray-400 italic mb-1">Allahumma innee as-aluka Ridaaka wal Jannah wa a'audhu'bika min sakhatika wan-naar.</p>
+                <p class="text-[10px] text-gray-300">"O Allah, I ask of Your pleasure and for Paradise, and I seek refuge from Your displeasure and from the Hellfire".</p>
             </div>
         </div>
-    </div>
+    </div></div></div>
 
     <!-- Tasbih Modal -->
     <div id="tasbihModal" class="fixed inset-0 z-50 hidden">
