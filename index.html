@@ -33,12 +33,11 @@
             border: 1px solid rgba(255, 255, 255, 0.06);
             box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.6);
         }
-        .gold-glow { box-shadow: 0 0 40px rgba(217, 119, 6, 0.15); }
+        .gold-glow { box-shadow: 0 0 40px rgba(217, 119, 6, 0.1); }
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
         
-        /* Range Slider Styling */
         input[type=range] { -webkit-appearance: none; background: transparent; }
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none; height: 24px; width: 24px; border-radius: 50%;
@@ -50,8 +49,8 @@
         }
         input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: #262626; border-radius: 2px; }
         
-        .fade-in { animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .divider-icon::before { content: "۞"; font-family: 'Amiri', serif; color: #d97706; font-size: 1.5rem; }
         .divider-line { height: 1px; flex-grow: 1; background: linear-gradient(90deg, transparent, #d97706 50%, transparent); opacity: 0.3; }
     </style>
@@ -66,7 +65,8 @@
         <div class="glass-panel p-10 rounded-[2rem] shadow-2xl max-w-sm w-full text-center border-t border-gold-500/10 gold-glow">
             <div class="mb-10 relative">
                 <div class="w-32 h-32 mx-auto rounded-full border-2 border-gold-500/30 bg-black flex items-center justify-center relative mb-6 shadow-[0_0_40px_rgba(217,119,6,0.2)] overflow-hidden group">
-                     <img src="1000160425.png" style="background-color:darkgoldenrod" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Ashes Logo">
+                    <img src="1000160425.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Ashes Logo">
+                    <i class="fas fa-fire text-5xl text-gold-500 animate-pulse hidden absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></i>
                     <div class="absolute inset-0 rounded-full border border-dashed border-gold-400/40 animate-spin-slow pointer-events-none"></div>
                 </div>
                 <h1 class="text-6xl font-serif font-bold text-gold-500 tracking-[0.2em] drop-shadow-lg" style="text-shadow: 0 2px 10px rgba(0,0,0,0.5);">ASHES</h1>
@@ -93,8 +93,9 @@
         <header class="bg-ashes-950/80 backdrop-blur-xl border-b border-gray-800/50 sticky top-0 z-40 shadow-2xl">
             <div class="max-w-4xl mx-auto px-5 py-4 flex justify-between items-center">
                 <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 bg-black rounded-full flex items-center justify-center border border-gold-600/30 shadow-inner overflow-hidden">
-                        <img src="1000160425.png" style="background-color:darkgoldenrod" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Ashes Logo">
+                    <div class="w-10 h-10 bg-black rounded-full flex items-center justify-center border border-gold-600/30 shadow-inner overflow-hidden relative">
+                        <img src="1000160425.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'" class="w-full h-full object-cover" alt="Ashes Logo">
+                        <i class="fas fa-fire text-gold-500 text-sm hidden absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></i>
                     </div>
                     <div>
                         <h2 class="font-bold text-white leading-none tracking-[0.2em] font-serif text-lg">ASHES</h2>
@@ -164,7 +165,6 @@
                     <div id="khatamBar" class="absolute top-0 left-0 h-full bg-gradient-to-r from-emerald-900 via-emerald-600 to-emerald-400 transition-all duration-1000 shadow-[0_0_15px_rgba(16,185,129,0.3)]" style="width: 0%"></div>
                 </div>
 
-                <!-- Slider with Buttons -->
                 <div class="flex items-center gap-3 bg-ashes-950/80 p-3 rounded-2xl border border-gray-800/50">
                     <button onclick="app.adjustKhatam(-1)" class="w-10 h-10 rounded-xl bg-ashes-800 hover:bg-ashes-700 text-gold-500 border border-gray-700 flex items-center justify-center transition-colors active:scale-95"><i class="fas fa-minus text-xs"></i></button>
                     <div class="flex-1 relative h-6 flex items-center">
@@ -200,6 +200,7 @@
         </main>
     </div>
 
+    <!-- Modals -->
     <!-- Error Modal -->
     <div id="errorModal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4 fade-in">
         <div class="absolute inset-0 bg-black/90 backdrop-blur-md"></div>
@@ -207,6 +208,42 @@
             <div class="flex flex-col items-center text-center gap-3 text-red-500 mb-4"><i class="fas fa-lock text-3xl mb-2"></i><h3 class="font-bold text-xl text-white">Database Locked</h3></div>
             <p class="text-gray-400 text-sm mb-6 text-center">The app cannot save data. You must update your Firebase Rules.</p>
             <button onclick="document.getElementById('errorModal').classList.add('hidden')" class="w-full bg-red-900/50 hover:bg-red-900 border border-red-500/50 text-red-200 font-bold py-3 rounded-xl transition-colors text-xs uppercase tracking-widest">Dismiss</button>
+        </div>
+    </div>
+
+    <!-- Duas Modal (Correctly Placed) -->
+    <div id="duasModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/95 backdrop-blur-md" onclick="app.closeDuas()"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md h-[80vh] glass-panel rounded-3xl border border-gray-800 flex flex-col animate-fadeIn">
+            <div class="p-5 border-b border-gray-800 flex justify-between items-center bg-ashes-900/50">
+                <h3 class="text-gold-500 font-serif text-2xl font-bold">Essential Duas</h3>
+                <button onclick="app.closeDuas()" class="text-gray-500 hover:text-white"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="p-6 overflow-y-auto space-y-6 flex-1 custom-scrollbar">
+                <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Moon Sighting (Hilal)</p><p class="font-arabic text-xl text-right mb-2 leading-loose">اللَّهُمَّ أَهِلَّهُ عَلَيْنَا بِالْأَمْنِ وَالْإِيمَانِ، وَالسَّلَامَةِ وَالْإِسْلَامِ، رَبِّي وَرَبُّكَ اللَّهُ</p><p class="text-xs text-gray-400 italic">"O Allah, let this moon appear on us with security and faith; with safety and Islam. (O Moon!) My Lord and your Lord is Allah."</p></div>
+                <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Suhoor (Intention)</p><p class="font-arabic text-xl text-right mb-2 leading-loose">وَبِصَوْمِ غَدٍ نَّوَيْتُ مِنْ شَهْرِ رَمَضَانَ</p><p class="text-xs text-gray-400 italic">"I intend to keep the fast for tomorrow in the month of Ramadan."</p></div>
+                <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Iftar (Breaking Fast)</p><p class="font-arabic text-xl text-right mb-2 leading-loose">اللَّهُمَّ لَكَ صُمْتُ وَعَلَى رِزْقِكَ أَفْطَرْتُ</p><p class="text-xs text-gray-400 italic">"O Allah, I fasted for You and I break my fast with Your sustenance."</p></div>
+                <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Iftar (As Guest)</p><p class="font-arabic text-xl text-right mb-2 leading-loose">أَفْطَرَ عِنْدَكُمُ الصَّائِمُونَ، وَأَكَلَ طَعَامَكُمُ الْأَبْرَارُ، وَصَلَّتْ عَلَيْكُمُ الْمَلَائِكَةُ</p><p class="text-xs text-gray-400 italic">"May the fasting people break fasting at your place, and may the pious eat your food, and may the angels pray for you."</p></div>
+                <div class="flex items-center gap-3 justify-center opacity-30 my-2"><div class="h-px w-10 bg-white"></div><span class="text-xs">۞</span><div class="h-px w-10 bg-white"></div></div>
+                <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">First Ashra (Mercy)</p><p class="font-arabic text-xl text-right mb-2 leading-loose">رَبِّ اغْفِرْ وَارْحَمْ وَأَنْتَ خَيْرُ الرَّاحِمِينَ</p><p class="text-xs text-gray-400 italic">"O My Lord, forgive and have mercy, and You are the best of the Merciful."</p></div>
+                <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Second Ashra (Forgiveness)</p><p class="font-arabic text-xl text-right mb-2 leading-loose">أَسْتَغْفِرُ اللَّهَ رَبِّي مِنْ كُلِّ ذَنْبٍ وَأَتُوبُ إِلَيْهِ</p><p class="text-xs text-gray-400 italic">"I seek forgiveness from Allah, my Lord, from every sin, and I turn to Him in repentance."</p></div>
+                <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Third Ashra (Protection)</p><p class="font-arabic text-xl text-right mb-2 leading-loose">اللَّهُمَّ أَجِرْنِي مِنَ النَّارِ</p><p class="text-xs text-gray-400 italic">"O Allah, save me from the Fire."</p></div>
+                <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Laylatul Qadr</p><p class="font-arabic text-xl text-right mb-2 leading-loose">اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي</p><p class="text-xs text-gray-400 italic">"O Allah, You are Forgiving and love forgiveness, so forgive me."</p></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tasbih Modal -->
+    <div id="tasbihModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/95 backdrop-blur-md" onclick="app.closeTasbih()"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-sm glass-panel p-8 rounded-3xl border border-gold-600/30 text-center animate-fadeIn">
+            <h3 class="text-gold-500 font-serif text-2xl font-bold mb-1">Tasbih</h3>
+            <div class="bg-black/40 rounded-full w-48 h-48 mx-auto flex items-center justify-center border-4 border-gray-800 mb-6 relative">
+                <span id="tasbihCount" class="text-6xl font-mono font-bold text-white relative z-10">0</span>
+                <div class="absolute inset-0 rounded-full border-t-2 border-gold-500/20 animate-spin-slow"></div>
+            </div>
+            <button onclick="app.tasbihClick()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-4 rounded-xl shadow-lg mb-3 text-lg transition-colors">COUNT</button>
+            <button onclick="app.tasbihReset()" class="text-xs text-gray-500 hover:text-red-400 transition-colors">RESET COUNTER</button>
         </div>
     </div>
 
@@ -281,7 +318,6 @@
                     if (user) { 
                         this.state.user = user; 
                         this.setupRealtimeListeners(user.uid);
-                        // Toggle Google Button
                         const gBtn = document.getElementById('btnLinkGoogle');
                         if(gBtn) gBtn.classList.toggle('hidden', !user.isAnonymous);
                     } 
@@ -294,8 +330,8 @@
                 onSnapshot(logsRef, (snapshot) => {
                     this.state.logs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                     this.state.logs.sort((a, b) => new Date(b.date) - new Date(a.date));
-                    this.renderDashboard();
-                    this.renderLogs();
+                    window.app.renderDashboard(); // Fix: use window.app explicitly
+                    window.app.renderLogs();      // Fix: use window.app explicitly
                 }, (err) => { if(err.code === 'permission-denied') document.getElementById('errorModal').classList.remove('hidden'); });
 
                 const lbRef = collection(db, 'artifacts', teamGroupId, 'public', 'data', 'leaderboard');
@@ -308,12 +344,12 @@
                         document.getElementById('appScreen').classList.remove('hidden');
                         document.getElementById('appScreen').classList.add('fade-in');
                         setText('userDisplay', myProfile.name);
-                        this.updateKhatamVisuals(myProfile.khatamPage);
+                        window.app.updateKhatamVisuals(myProfile.khatamPage); // Fix: use window.app explicitly
                     } else {
                         document.getElementById('authScreen').classList.remove('hidden');
                         document.getElementById('appScreen').classList.add('hidden');
                     }
-                    this.renderLeaderboard();
+                    window.app.renderLeaderboard(); // Fix: use window.app explicitly
                 }, (err) => { if(err.code === 'permission-denied') document.getElementById('errorModal').classList.remove('hidden'); });
             },
 
@@ -388,7 +424,7 @@
                 } catch (error) { if (error.code === 'permission-denied') document.getElementById('errorModal').classList.remove('hidden'); else alert(error.message); }
             },
 
-            deleteLog: async function(id) { try { if(!confirm("Delete?")) return; await deleteDoc(doc(db, 'artifacts', teamGroupId, 'users', this.state.user.uid, 'logs', id)); const tempLogs = this.state.logs.filter(l => l.id !== id); await this.updateProfile(tempLogs, this.state.khatamPage); this.showToast("Deleted"); } catch (error) { if (error.code === 'permission-denied') document.getElementById('errorModal').classList.remove('hidden'); } },
+            deleteLog: async function(id) { try { if(!confirm("Delete entry?")) return; await deleteDoc(doc(db, 'artifacts', teamGroupId, 'users', this.state.user.uid, 'logs', id)); const tempLogs = this.state.logs.filter(l => l.id !== id); await this.updateProfile(tempLogs, this.state.khatamPage); this.showToast("Deleted"); } catch (error) { if (error.code === 'permission-denied') document.getElementById('errorModal').classList.remove('hidden'); } },
 
             saveKhatam: async function() { try { const val = document.getElementById('khatamSlider').value; this.state.khatamPage = val; await this.updateProfile(this.state.logs, val); this.showToast("Khatam Updated"); } catch (error) { if (error.code === 'permission-denied') document.getElementById('errorModal').classList.remove('hidden'); } },
             
@@ -408,13 +444,11 @@
                 const bar = document.getElementById('khatamBar'); 
                 if(bar) bar.style.width = `${p}%`;
                 
-                // Track fill visual update
                 const trackFill = document.getElementById('khatamTrackFill');
-                if(trackFill) trackFill.style.width = `${(val/604)*100}%`;
+                if(trackFill) trackFill.style.width = `${p}%`;
                 
-                // Thumb position visual update
                 const thumb = document.getElementById('khatamThumb');
-                if(thumb) thumb.style.left = `${(val/604)*100}%`;
+                if(thumb) thumb.style.left = `${p}%`;
             },
 
             updateProfile: async function(logs, khatam) {
@@ -439,7 +473,7 @@
             calculateTotalScore: function(logs, khatamPage) {
                 let score = 0;
                 logs.forEach(l => { if (l.fasted) score += 50; if (l.prayers) score += (l.prayers.length * 10); if (l.sadaqah) score += 20; if (l.quran) { score += 20; if (l.quran.translation) score += 15; } });
-                score += (parseInt(khatamPage || 0) * 2);
+                score += (parseInt(khatam || 0) * 2);
                 return score;
             },
 
@@ -454,6 +488,7 @@
                 const logDate = document.getElementById('logDate');
                 if(logDate) logDate.value = new Date().toISOString().split('T')[0];
                 
+                // Expanded Verse List
                 const vs = [ 
                     { ar: "فَإِنَّ مَعَ ٱلْعُسْرِ يُسْرًا", en: "For indeed, with hardship [will be] ease. (94:5)" },
                     { ar: "ٱللَّهُ نُورُ ٱلسَّمَٰوَٰتِ وَٱلْأَرْضِ", en: "Allah is the Light of the heavens and the earth. (24:35)" },
@@ -467,7 +502,12 @@
                     { ar: "إِنَّ رَحْمَتَ ٱللَّهِ قَرِيبٌ مِّنَ ٱلْمُحْسِنِينَ", en: "Indeed, the mercy of Allah is near to the doers of good. (7:56)" },
                     { ar: "قُلْ يَٰعِبَادِىَ ٱلَّذِينَ أَسْرَفُوا۟ عَلَىٰٓ أَنفُسِهِمْ لَا تَقْنَطُوا۟ مِن رَّحْمَةِ ٱللَّهِ", en: "Say, 'O My servants who have transgressed against themselves, do not despair of the mercy of Allah.' (39:53)" },
                     { ar: "وَمَن يَتَوَكَّلْ عَلَى ٱللَّهِ فَهُوَ حَسْبُهُۥ", en: "And whoever relies upon Allah - then He is sufficient for him. (65:3)" },
-                    { ar: "إِنَّ ٱللَّهَ يُحِبُّ ٱلْمُتَوَكِّلِينَ", en: "Indeed, Allah loves those who rely [upon Him]. (3:159)" }
+                    { ar: "إِنَّ ٱللَّهَ يُحِبُّ ٱلْمُتَوَكِّلِينَ", en: "Indeed, Allah loves those who rely [upon Him]. (3:159)" },
+                    { ar: "وَإِذَا سَأَلَكَ عِبَادِى عَنِّى فَإِنِّى قَرِيبٌ", en: "And when My servants ask you concerning Me - indeed I am near. (2:186)" },
+                    { ar: "لَا يُكَلِّفُ ٱللَّهُ نَفْسًا إِلَّا وُسْعَهَا", en: "Allah does not charge a soul except [with that within] its capacity. (2:286)" },
+                    { ar: "إِنَّمَا يُوَفَّى ٱلصَّٰبِرُونَ أَجْرَهُم بِغَيْرِ حِسَابٍ", en: "Indeed, the patient will be given their reward without account. (39:10)" },
+                    { ar: "وَٱسْتَعِينُوا۟ بِٱلصَّبْرِ وَٱلصَّلَوٰةِ", en: "And seek help through patience and prayer. (2:45)" },
+                    { ar: "رَبَّنَآ ءَاتِنَا فِى ٱلدُّنْيَا حَسَنَةً وَفِى ٱلْـَٔاخِرَةِ حَسَنَةً", en: "Our Lord, give us in this world [that which is] good and in the Hereafter [that which is] good. (2:201)" }
                 ];
                 const r = vs[Math.floor(Math.random()*vs.length)];
                 setText('dailyArabic', r.ar);
@@ -489,18 +529,9 @@
                 if (val === undefined) val = this.state.khatamPage;
                 setText('khatamCurrentDisplay', val);
                 const slider = document.getElementById('khatamSlider'); if(slider) slider.value = val;
-                
                 const p = Math.round((val/604)*100);
                 setText('khatamPercent', `${p}% Completed`);
-                
-                const bar = document.getElementById('khatamBar'); 
-                if(bar) bar.style.width = `${p}%`;
-                
-                const trackFill = document.getElementById('khatamTrackFill');
-                if(trackFill) trackFill.style.width = `${p}%`;
-                
-                const thumb = document.getElementById('khatamThumb');
-                if(thumb) thumb.style.left = `${p}%`;
+                const bar = document.getElementById('khatamBar'); if(bar) bar.style.width = `${p}%`;
             },
 
             renderDashboard: function() {
