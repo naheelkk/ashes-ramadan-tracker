@@ -37,7 +37,6 @@
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
-        
         input[type=range] { -webkit-appearance: none; background: transparent; }
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none; height: 24px; width: 24px; border-radius: 50%;
@@ -45,11 +44,9 @@
             cursor: pointer; margin-top: -10px;
             box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
             border: 2px solid #141414;
-            position: relative; z-index: 20;
         }
         input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: #262626; border-radius: 2px; }
-        
-        .fade-in { animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        .fade-in { animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .divider-icon::before { content: "۞"; font-family: 'Amiri', serif; color: #d97706; font-size: 1.5rem; }
         .divider-line { height: 1px; flex-grow: 1; background: linear-gradient(90deg, transparent, #d97706 50%, transparent); opacity: 0.3; }
@@ -168,9 +165,8 @@
                 <div class="flex items-center gap-3 bg-ashes-950/80 p-3 rounded-2xl border border-gray-800/50">
                     <button onclick="app.adjustKhatam(-1)" class="w-10 h-10 rounded-xl bg-ashes-800 hover:bg-ashes-700 text-gold-500 border border-gray-700 flex items-center justify-center transition-colors active:scale-95"><i class="fas fa-minus text-xs"></i></button>
                     <div class="flex-1 relative h-6 flex items-center">
-                        <input type="range" min="0" max="604" value="0" id="khatamSlider" class="w-full h-full absolute inset-0 z-20 opacity-0 cursor-pointer" oninput="app.handleKhatamSlide(this.value)">
-                        <div class="w-full h-1 bg-gray-800 rounded-full overflow-hidden relative z-10"><div id="khatamTrackFill" class="h-full bg-gold-600 w-0"></div></div>
-                        <div id="khatamThumb" class="absolute h-5 w-5 bg-gold-500 rounded-full border-2 border-ashes-900 shadow-md z-10 pointer-events-none" style="left: 0%; transform: translateX(-50%)"></div>
+                        <input type="range" min="0" max="604" value="0" id="khatamSlider" class="w-full h-full absolute inset-0 z-10 opacity-0 cursor-pointer" oninput="app.handleKhatamSlide(this.value)">
+                        <div class="w-full h-1.5 bg-gray-700 rounded-full overflow-hidden"><div id="khatamTrackFill" class="h-full bg-gold-600 w-0"></div></div>
                     </div>
                     <button onclick="app.adjustKhatam(1)" class="w-10 h-10 rounded-xl bg-ashes-800 hover:bg-ashes-700 text-gold-500 border border-gray-700 flex items-center justify-center transition-colors active:scale-95"><i class="fas fa-plus text-xs"></i></button>
                 </div>
@@ -187,8 +183,18 @@
                     <div><h3 class="text-white font-bold text-lg uppercase tracking-wider font-serif">Standings</h3></div>
                     <div class="bg-ashes-900/80 px-3 py-1.5 rounded-lg border border-gold-600/20 shadow-lg"><span class="text-[10px] text-gold-500 font-bold flex items-center gap-2 uppercase tracking-wide"><i class="fas fa-crown"></i> Team</span></div>
                 </div>
-                <div class="overflow-x-auto rounded-2xl border border-gray-800/50 bg-ashes-900/30">
-                    <table class="w-full text-left text-sm"><thead class="bg-ashes-950/80 text-gray-500 uppercase text-[9px] font-bold tracking-widest"><tr><th class="px-5 py-4">#</th><th class="px-5 py-4">Member</th><th class="px-5 py-4 text-center">Fasts</th><th class="px-5 py-4 text-right">Score</th></tr></thead><tbody id="leaderboardBody" class="divide-y divide-gray-800/50 text-xs"></tbody></table>
+                <div class="overflow-x-auto rounded-2xl border border-gray-800/50 bg-ashes-900/20">
+                    <table class="w-full text-left text-sm min-w-[320px]">
+                        <thead class="bg-ashes-950 text-gray-500 uppercase text-[9px] font-bold tracking-widest">
+                            <tr>
+                                <th class="px-3 py-4 md:px-5">Rank</th>
+                                <th class="px-3 py-4 md:px-5">Member</th>
+                                <th class="px-3 py-4 md:px-5 text-center">Fasts</th>
+                                <th class="px-3 py-4 md:px-5 text-right">Score</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboardBody" class="divide-y divide-gray-800/50"></tbody>
+                    </table>
                 </div>
             </div>
 
@@ -201,82 +207,22 @@
     </div>
 
     <!-- Modals -->
-    <!-- Error Modal -->
     <div id="errorModal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4 fade-in">
         <div class="absolute inset-0 bg-black/90 backdrop-blur-md"></div>
         <div class="relative bg-ashes-900 border border-red-500/30 rounded-2xl p-8 max-w-md w-full shadow-2xl">
             <div class="flex flex-col items-center text-center gap-3 text-red-500 mb-4"><i class="fas fa-lock text-3xl mb-2"></i><h3 class="font-bold text-xl text-white">Database Locked</h3></div>
             <p class="text-gray-400 text-sm mb-6 text-center">The app cannot save data. You must update your Firebase Rules.</p>
+            <div class="bg-black/50 p-4 rounded-lg border border-gray-800 mb-4">
+                <p class="text-xs text-gray-500 uppercase font-bold mb-2">How to Fix (Required):</p>
+                <ol class="list-decimal list-inside text-xs text-gray-400 space-y-2"><li>Go to Firebase Console > Build > <strong>Firestore Database</strong>.</li><li>Click the <strong>Rules</strong> tab.</li><li>Replace with: <code>allow read, write: if true;</code></li><li>Click <strong>Publish</strong>.</li></ol>
+            </div>
             <button onclick="document.getElementById('errorModal').classList.add('hidden')" class="w-full bg-red-900/50 hover:bg-red-900 border border-red-500/50 text-red-200 font-bold py-3 rounded-xl transition-colors text-xs uppercase tracking-widest">Dismiss</button>
         </div>
     </div>
 
-    <!-- Modals (Duas/Tasbih) -->
-    <div id="tasbihModal" class="fixed inset-0 z-50 hidden"><div class="absolute inset-0 bg-black/95 backdrop-blur-md" onclick="app.closeTasbih()"></div><div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-sm glass-panel p-8 rounded-3xl border border-gold-600/30 text-center"><h3 class="text-gold-500 font-serif text-2xl font-bold mb-1">Tasbih</h3><div class="bg-black/40 rounded-full w-48 h-48 mx-auto flex items-center justify-center border-4 border-gray-800 mb-6 relative"><span id="tasbihCount" class="text-6xl font-mono font-bold text-white relative z-10">0</span><div class="absolute inset-0 rounded-full border-t-2 border-gold-500/20 animate-spin-slow"></div></div><button onclick="app.tasbihClick()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-4 rounded-xl shadow-lg mb-3 text-lg transition-colors">COUNT</button><button onclick="app.tasbihReset()" class="text-xs text-gray-500 hover:text-red-400 transition-colors">RESET COUNTER</button></div></div>
-    <div id="duasModal" class="fixed inset-0 z-50 hidden"><div class="absolute inset-0 bg-black/95 backdrop-blur-md" onclick="app.closeDuas()"></div><div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md h-[80vh] glass-panel rounded-3xl border border-gray-800 flex flex-col"><div class="p-5 border-b border-gray-800 flex justify-between items-center"><h3 class="text-gold-500 font-serif text-2xl font-bold">Essential Duas</h3><button onclick="app.closeDuas()" class="text-gray-500 hover:text-white"><i class="fas fa-times"></i></button></div><div class="p-6 overflow-y-auto space-y-6 flex-1 custom-scrollbar">
-        <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Moon Sighting (Hilal)</p><p class="font-arabic text-xl text-right mb-2 leading-loose">اللَّهُمَّ أَهِلَّهُ عَلَيْنَا بِالْأَمْنِ وَالْإِيمَانِ، وَالسَّلَامَةِ وَالْإِسْلَامِ، رَبِّي وَرَبُّكَ اللَّهُ</p><p class="text-xs text-gray-400 italic">"O Allah, let this moon appear on us with security and faith; with safety and Islam. (O Moon!) My Lord and your Lord is Allah."</p></div>
-        <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Suhoor (Intention)</p><p class="font-arabic text-xl text-right mb-2 leading-loose">وَبِصَوْمِ غَدٍ نَّوَيْتُ مِنْ شَهْرِ رَمَضَانَ</p><p class="text-xs text-gray-400 italic">"I intend to keep the fast for tomorrow in the month of Ramadan."</p></div>
-        <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Iftar (Breaking Fast)</p><p class="font-arabic text-xl text-right mb-2 leading-loose">اللَّهُمَّ لَكَ صُمْتُ وَعَلَى رِزْقِكَ أَفْطَرْتُ</p><p class="text-xs text-gray-400 italic">"O Allah, I fasted for You and I break my fast with Your sustenance."</p></div>
-        <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Iftar (As Guest)</p><p class="font-arabic text-xl text-right mb-2 leading-loose">أَفْطَرَ عِنْدَكُمُ الصَّائِمُونَ، وَأَكَلَ طَعَامَكُمُ الْأَبْرَارُ، وَصَلَّتْ عَلَيْكُمُ الْمَلَائِكَةُ</p><p class="text-xs text-gray-400 italic">"May the fasting people break fasting at your place, and may the pious eat your food, and may the angels pray for you."</p></div>
-        
-        <div class="flex items-center gap-3 justify-center opacity-30 my-2"><div class="h-px w-10 bg-white"></div><span class="text-xs">۞</span><div class="h-px w-10 bg-white"></div></div>
-        
-        <!-- First 10 Days -->
-        <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50">
-            <p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">First 10 Days: Mercy (Rahmah)</p>
-            <p class="font-arabic text-xl text-right mb-2 leading-loose">رَبِّ اغْفِرْ وَارْحَمْ وَأَنْتَ خَيْرُ الرَّاحِمِينَ</p>
-            <p class="text-[10px] text-gray-400 italic mb-2">Rabbighfir warham wa anta khair-ur-raahimeen.</p>
-            <p class="text-[10px] text-gray-300">"My Lord, forgive and have mercy, for You are the Best of those who show mercy".</p>
-            <p class="text-[9px] text-gray-500 mt-2 border-t border-gray-700/30 pt-1">Alt: Ya Hayyu Ya Qayyumu Birahmatika asta-ghee-thu</p>
-        </div>
-
-        <!-- Second 10 Days -->
-        <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50">
-            <p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Second 10 Days: Forgiveness (Maghfirah)</p>
-            <p class="font-arabic text-xl text-right mb-2 leading-loose">اللَّهُمَّ اغْفِرْ لِي ذُنُوبِي يَا رَبَّ الْعَالَمِينَ</p>
-            <p class="text-[10px] text-gray-400 italic mb-2">Allahumma-ghfir lee dhunoobi ya rabbal 'alameen.</p>
-            <p class="text-[10px] text-gray-300">"O Allah, forgive my sins, O Lord of the Worlds."</p>
-            <p class="text-[9px] text-gray-500 mt-2 border-t border-gray-700/30 pt-1">Alt: Astaghfirullahal-ladhi la ilaha illa Huwal-Hayyul-Qayyumu wa atubu ilaih</p>
-        </div>
-
-        <!-- Third 10 Days -->
-        <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50">
-            <p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Third 10 Days: Salvation (Itqun-min-an-Naar)</p>
-            
-            <div class="mb-4 border-b border-gray-700/30 pb-3">
-                <p class="text-[9px] text-emerald-500 font-bold mb-1 uppercase">Laylatul Qadr / Forgiveness</p>
-                <p class="font-arabic text-xl text-right mb-1 leading-loose">اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي</p>
-                <p class="text-[10px] text-gray-400 italic mb-1">Allahumma innaka 'afuwwun, tuhibb al-'afwa, fa'fu 'anni.</p>
-                <p class="text-[10px] text-gray-300">"O Allah, You are the Most Forgiving, and You love to forgive, so forgive me".</p>
-            </div>
-
-            <div>
-                <p class="text-[9px] text-emerald-500 font-bold mb-1 uppercase">Protection from Hellfire</p>
-                <p class="font-arabic text-xl text-right mb-1 leading-loose">اللَّهُمَّ إِنِّي أَسْأَلُكَ رِضَاكَ وَالجَنَّةَ ، وَأَعُوذُ بِكَ مِنْ سَخَطِكَ وَالنَّارِ</p>
-                <p class="text-[10px] text-gray-400 italic mb-1">Allahumma innee as-aluka Ridaaka wal Jannah wa a'audhu'bika min sakhatika wan-naar.</p>
-                <p class="text-[10px] text-gray-300">"O Allah, I ask of Your pleasure and for Paradise, and I seek refuge from Your displeasure and from the Hellfire".</p>
-            </div>
-        </div>
-    </div></div></div>
-
-    <!-- Tasbih Modal -->
-    <div id="tasbihModal" class="fixed inset-0 z-50 hidden">
-        <div class="absolute inset-0 bg-black/95 backdrop-blur-md" onclick="app.closeTasbih()"></div>
-        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-sm glass-panel p-8 rounded-3xl border border-gold-600/30 text-center animate-fadeIn">
-            <h3 class="text-gold-500 font-serif text-2xl font-bold mb-1">Tasbih</h3>
-            <div class="bg-black/40 rounded-full w-48 h-48 mx-auto flex items-center justify-center border-4 border-gray-800 mb-6 relative">
-                <span id="tasbihCount" class="text-6xl font-mono font-bold text-white relative z-10">0</span>
-                <div class="absolute inset-0 rounded-full border-t-2 border-gold-500/20 animate-spin-slow"></div>
-            </div>
-            <button onclick="app.tasbihClick()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-4 rounded-xl shadow-lg mb-3 text-lg transition-colors">COUNT</button>
-            <button onclick="app.tasbihReset()" class="text-xs text-gray-500 hover:text-red-400 transition-colors">RESET COUNTER</button>
-        </div>
-    </div>
-
-    <!-- Log Modal -->
     <div id="logModal" class="fixed inset-0 z-50 hidden">
         <div class="absolute inset-0 bg-black/95 backdrop-blur-md transition-opacity" onclick="app.closeLogger()"></div>
-        <div class="absolute bottom-0 md:top-1/2 md:left-1/2 md:transform md:-translate-x-1/2 md:-translate-y-1/2 md:bottom-auto w-full md:w-[500px] md:rounded-3xl bg-[#080808] border border-gray-800 shadow-2xl flex flex-col max-h-[90vh] animate-fadeIn ring-1 ring-white/5">
+        <div class="absolute bottom-0 md:top-1/2 md:left-1/2 md:transform md:-translate-x-1/2 md:-translate-y-1/2 md:bottom-auto w-full md:w-[500px] md:rounded-3xl bg-[#0a0a0a] border border-gray-800 shadow-2xl flex flex-col max-h-[90vh] animate-fadeIn ring-1 ring-white/5">
             <div class="p-6 border-b border-gray-800 flex justify-between items-center bg-ashes-900/50 rounded-t-3xl"><div><p class="font-arabic text-gold-500 text-xl">بِسْمِ ٱللَّٰهِ</p><p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Daily Log</p></div><button onclick="app.closeLogger()" class="text-gray-500 hover:text-white bg-ashes-800 w-8 h-8 rounded-full flex items-center justify-center transition-colors"><i class="fas fa-times"></i></button></div>
             <div class="overflow-y-auto p-6 space-y-8 flex-1 custom-scrollbar">
                 <div><label class="block text-gray-500 text-[9px] uppercase font-bold mb-2 tracking-widest">Date</label><input type="date" id="logDate" class="w-full bg-ashes-900 border border-gray-800 rounded-xl p-4 text-white focus:border-gold-500 outline-none transition-colors appearance-none text-sm"></div>
@@ -285,6 +231,7 @@
                     <div class="grid grid-cols-2 gap-3">
                         <div class="p-4 bg-ashes-800/30 rounded-xl border border-gray-700/30 flex items-center justify-between hover:border-gold-600/30 transition-colors"><span class="text-gray-300 text-xs font-bold uppercase tracking-wide">Fasting</span><input type="checkbox" id="checkFast" class="w-5 h-5 accent-gold-500 cursor-pointer"></div>
                         <div class="p-4 bg-ashes-800/30 rounded-xl border border-gray-700/30 flex items-center justify-between hover:border-emerald-600/30 transition-colors"><span class="text-gray-300 text-xs font-bold uppercase tracking-wide">Charity</span><input type="checkbox" id="checkSadaqah" class="w-5 h-5 accent-emerald-500 cursor-pointer"></div>
+                        <div class="p-4 bg-ashes-800/30 rounded-xl border border-gray-700/30 flex items-center justify-between hover:border-purple-600/30 transition-colors col-span-2"><span class="text-gray-300 text-xs font-bold uppercase tracking-wide">Taraweeh</span><input type="checkbox" id="checkTaraweeh" class="w-5 h-5 accent-purple-500 cursor-pointer"></div>
                     </div>
                     <div>
                         <label class="block text-gray-500 text-[9px] uppercase font-bold mb-3 text-center tracking-widest">Prayers (Farz)</label>
@@ -295,15 +242,24 @@
                             <label class="cursor-pointer group"><input type="checkbox" class="peer sr-only prayer-check" value="Maghrib"><div class="h-12 w-full rounded-xl bg-ashes-800 border border-gray-700 flex items-center justify-center text-gray-500 peer-checked:bg-emerald-900/20 peer-checked:border-emerald-500 peer-checked:text-emerald-400 transition-all font-bold text-[9px] uppercase">Mag</div></label>
                             <label class="cursor-pointer group"><input type="checkbox" class="peer sr-only prayer-check" value="Isha"><div class="h-12 w-full rounded-xl bg-ashes-800 border border-gray-700 flex items-center justify-center text-gray-500 peer-checked:bg-emerald-900/20 peer-checked:border-emerald-500 peer-checked:text-emerald-400 transition-all font-bold text-[9px] uppercase">Isha</div></label>
                         </div>
+                        <div class="mt-4 p-4 bg-ashes-800/30 rounded-xl border border-gray-700/30">
+                            <label class="block text-gray-500 text-[9px] uppercase font-bold mb-2 tracking-widest text-center">How many in Jama'ah (Masjid)?</label>
+                            <div class="flex items-center justify-center gap-4">
+                                <button onclick="document.getElementById('jamaahCount').stepDown()" class="w-8 h-8 rounded-lg bg-ashes-700 text-gray-400 hover:bg-ashes-600 flex items-center justify-center font-bold">-</button>
+                                <input type="number" id="jamaahCount" min="0" max="5" value="0" readonly class="w-12 text-center bg-transparent text-white font-bold text-lg outline-none">
+                                <button onclick="document.getElementById('jamaahCount').stepUp()" class="w-8 h-8 rounded-lg bg-ashes-700 text-gray-400 hover:bg-ashes-600 flex items-center justify-center font-bold">+</button>
+                            </div>
+                             <p class="text-[8px] text-gray-600 text-center mt-2 italic">*7x Reward Points for Congregation</p>
+                        </div>
                     </div>
                 </div>
                 <div class="space-y-4">
-                    <h4 class="text-white font-bold text-xs border-b border-gray-800 pb-2 uppercase tracking-widest flex items-center gap-2 text-gold-600"><i class="fas fa-book-open"></i> Quran</h4>
+                    <h4 class="text-white font-bold text-sm border-b border-gray-800 pb-2 uppercase tracking-widest flex items-center gap-2 text-gold-600"><i class="fas fa-book-open"></i> Quran</h4>
                     <div class="flex items-center gap-2 mb-4 bg-ashes-900 p-3 rounded-xl border border-gray-800"><span class="text-gray-300 text-xs font-bold uppercase tracking-wide flex-1 pl-2">Read Quran Today?</span><div class="flex gap-2"><button onclick="app.toggleQuran(true)" id="btnQuranYes" class="px-6 py-2 rounded-lg text-[10px] uppercase font-bold bg-ashes-800 border border-gray-700 text-gray-400 transition-all">Yes</button><button onclick="app.toggleQuran(false)" id="btnQuranNo" class="px-6 py-2 rounded-lg text-[10px] uppercase font-bold bg-ashes-800 border border-gray-700 text-gray-400 transition-all">No</button></div></div>
                     <div id="quranDetails" class="hidden space-y-4 bg-ashes-800/20 p-5 rounded-xl border border-gold-600/10 animate-fadeIn">
                         <div><label class="block text-gray-500 text-[9px] uppercase font-bold mb-2 tracking-widest">Surah</label><select id="surahSelect" class="w-full bg-ashes-900 border border-gray-700 rounded-xl p-3 text-white text-sm focus:border-gold-500 outline-none"></select><div id="customSurahContainer" class="hidden mt-2"><input type="text" id="customSurahInput" placeholder="Type Surah Name..." class="w-full bg-ashes-900 border border-gold-600/50 rounded-xl p-3 text-white text-sm focus:border-gold-500 outline-none"></div></div>
                         <div class="grid grid-cols-2 gap-3"><div><label class="block text-gray-500 text-[9px] uppercase font-bold mb-2 tracking-widest">Pages / Verses</label><input type="number" id="versesCount" class="w-full bg-ashes-900 border border-gray-700 rounded-xl p-3 text-white text-sm focus:border-gold-500 outline-none"></div><div><label class="block text-gray-500 text-[9px] uppercase font-bold mb-2 tracking-widest">Time</label><select id="readTime" class="w-full bg-ashes-900 border border-gray-700 rounded-xl p-3 text-white text-sm focus:border-gold-500 outline-none"><option value="Fajr">Fajr</option><option value="Noon">Noon</option><option value="Taraweeh">Taraweeh</option></select></div></div>
-                        <div class="bg-gradient-to-br from-ashes-950 to-black p-4 rounded-xl border border-gold-900/30"><label class="flex items-center cursor-pointer mb-3"><input type="checkbox" id="checkTranslation" class="w-4 h-4 accent-gold-500" onchange="app.toggleTranslation()"><span class="ml-2 text-xs text-gold-400 font-bold uppercase tracking-wide">Read Translation/Tafseer</span></label><div id="verificationSection" class="hidden mt-2 pt-2 border-t border-gray-800"><label class="block text-[9px] text-emerald-500 mb-2 font-bold uppercase tracking-widest flex items-center gap-2"><i class="fas fa-pen-fancy"></i> Reflection (Required)</label><textarea id="reflectionInput" rows="2" placeholder="Briefly, what did you learn?" class="w-full bg-ashes-900/50 border border-gray-700 rounded-lg p-3 text-sm text-white focus:border-emerald-500 outline-none transition-colors placeholder-gray-600"></textarea><p class="text-[9px] text-gray-500 mt-1 text-right" id="charCount">0/10</p></div></div>
+                        <div class="bg-gradient-to-br from-ashes-950 to-black p-4 rounded-xl border border-gold-900/30"><label class="flex items-center cursor-pointer mb-3"><input type="checkbox" id="checkTranslation" class="w-4 h-4 accent-gold-500" onchange="app.toggleTranslation()"><span class="ml-2 text-xs text-gold-400 font-bold uppercase tracking-wide">Read Translation/Tafseer</span></label><div id="verificationSection" class="hidden mt-2 pt-2 border-t border-gray-800"><label class="block text-[9px] text-emerald-500 mb-2 font-bold uppercase tracking-widest flex items-center gap-2"><i class="fas fa-pen-fancy"></i> Reflection (Required)</label><textarea id="reflectionInput" rows="2" placeholder="Briefly, what did you learn?" class="w-full bg-ashes-900/50 border border-gray-700 rounded-lg p-3 text-sm text-white focus:border-emerald-500 outline-none transition-colors placeholder-gray-600"></textarea><p class="text-[9px] text-gray-500 mt-1 text-right" id="charCount">0/10 chars</p></div></div>
                     </div>
                 </div>
             </div>
@@ -311,7 +267,18 @@
         </div>
     </div>
 
-    <div id="toast" class="fixed top-5 right-5 z-50 transform translate-x-full transition-transform duration-300"><div class="bg-ashes-800 border-l-4 border-gold-500 text-white px-6 py-4 rounded-lg shadow-2xl flex items-center border border-gray-700/50"><i class="fas fa-check-circle text-gold-500 mr-3 text-xl"></i><div><h4 class="font-bold text-sm text-white">Success</h4><p class="text-xs text-gray-400" id="toastMsg">Action completed</p></div></div></div>
+    <!-- Modals (Duas/Tasbih) -->
+    <div id="tasbihModal" class="fixed inset-0 z-50 hidden"><div class="absolute inset-0 bg-black/95 backdrop-blur-md" onclick="app.closeTasbih()"></div><div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-sm glass-panel p-8 rounded-3xl border border-gold-600/30 text-center"><h3 class="text-gold-500 font-serif text-2xl font-bold mb-1">Tasbih</h3><div class="bg-black/40 rounded-full w-48 h-48 mx-auto flex items-center justify-center border-4 border-gray-800 mb-6 relative"><span id="tasbihCount" class="text-6xl font-mono font-bold text-white relative z-10">0</span><div class="absolute inset-0 rounded-full border-t-2 border-gold-500/20 animate-spin-slow"></div></div><button onclick="app.tasbihClick()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-4 rounded-xl shadow-lg mb-3 text-lg transition-colors">COUNT</button><button onclick="app.tasbihReset()" class="text-xs text-gray-500 hover:text-red-400 transition-colors">RESET COUNTER</button></div></div>
+    <div id="duasModal" class="fixed inset-0 z-50 hidden"><div class="absolute inset-0 bg-black/95 backdrop-blur-md" onclick="app.closeDuas()"></div><div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md h-[80vh] glass-panel rounded-3xl border border-gray-800 flex flex-col"><div class="p-5 border-b border-gray-800 flex justify-between items-center"><h3 class="text-gold-500 font-serif text-2xl font-bold">Essential Duas</h3><button onclick="app.closeDuas()" class="text-gray-500 hover:text-white"><i class="fas fa-times"></i></button></div><div class="p-6 overflow-y-auto space-y-6 flex-1 custom-scrollbar">
+        <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Moon Sighting (Hilal)</p><p class="font-arabic text-xl text-right mb-2 leading-loose">اللَّهُمَّ أَهِلَّهُ عَلَيْنَا بِالْأَمْنِ وَالْإِيمَانِ، وَالسَّلَامَةِ وَالْإِسْلَامِ، رَبِّي وَرَبُّكَ اللَّهُ</p><p class="text-xs text-gray-400 italic">"O Allah, let this moon appear on us with security and faith; with safety and Islam. (O Moon!) My Lord and your Lord is Allah."</p></div>
+        <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Suhoor (Intention)</p><p class="font-arabic text-xl text-right mb-2 leading-loose">وَبِصَوْمِ غَدٍ نَّوَيْتُ مِنْ شَهْرِ رَمَضَانَ</p><p class="text-xs text-gray-400 italic">"I intend to keep the fast for tomorrow in the month of Ramadan."</p></div>
+        <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Iftar (Breaking Fast)</p><p class="font-arabic text-xl text-right mb-2 leading-loose">اللَّهُمَّ لَكَ صُمْتُ وَعَلَى رِزْقِكَ أَفْطَرْتُ</p><p class="text-xs text-gray-400 italic">"O Allah, I fasted for You and I break my fast with Your sustenance."</p></div>
+        <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Iftar (As Guest)</p><p class="font-arabic text-xl text-right mb-2 leading-loose">أَفْطَرَ عِنْدَكُمُ الصَّائِمُونَ، وَأَكَلَ طَعَامَكُمُ الْأَبْرَارُ، وَصَلَّتْ عَلَيْكُمُ الْمَلَائِكَةُ</p><p class="text-xs text-gray-400 italic">"May the fasting people break fasting at your place, and may the pious eat your food, and may the angels pray for you."</p></div>
+        <div class="flex items-center gap-3 justify-center opacity-30 my-2"><div class="h-px w-10 bg-white"></div><span class="text-xs">۞</span><div class="h-px w-10 bg-white"></div></div>
+        <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">First 10 Days: Mercy (Rahmah)</p><p class="font-arabic text-xl text-right mb-2 leading-loose">رَبِّ اغْفِرْ وَارْحَمْ وَأَنْتَ خَيْرُ الرَّاحِمِينَ</p><p class="text-xs text-gray-400 italic mb-2">"My Lord, forgive and have mercy, for You are the Best of those who show mercy".</p><p class="text-[9px] text-gray-500 mt-2 border-t border-gray-700/30 pt-1">Alt: Ya Hayyu Ya Qayyumu Birahmatika asta-ghee-thu</p></div>
+        <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Second 10 Days: Forgiveness (Maghfirah)</p><p class="font-arabic text-xl text-right mb-2 leading-loose">اللَّهُمَّ اغْفِرْ لِي ذُنُوبِي يَا رَبَّ الْعَالَمِينَ</p><p class="text-xs text-gray-400 italic mb-2">"O Allah, forgive my sins, O Lord of the Worlds."</p><p class="text-[9px] text-gray-500 mt-2 border-t border-gray-700/30 pt-1">Alt: Astaghfirullahal-ladhi la ilaha illa Huwal-Hayyul-Qayyumu wa atubu ilaih</p></div>
+        <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Third 10 Days: Salvation (Itqun-min-an-Naar)</p><div class="mb-4 border-b border-gray-700/30 pb-3"><p class="text-[9px] text-emerald-500 font-bold mb-1 uppercase">Laylatul Qadr / Forgiveness</p><p class="font-arabic text-lg text-right mb-1 leading-loose">اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي</p><p class="text-[10px] text-gray-400 italic">"O Allah, You are the Most Forgiving, and You love to forgive, so forgive me".</p></div><div><p class="text-[9px] text-emerald-500 font-bold mb-1 uppercase">Protection from Hellfire</p><p class="font-arabic text-lg text-right mb-1 leading-loose">اللَّهُمَّ إِنِّي أَسْأَلُكَ رِضَاكَ وَالجَنَّةَ ، وَأَعُوذُ بِكَ مِنْ سَخَطِكَ وَالنَّارِ</p><p class="text-[10px] text-gray-400 italic">"O Allah, I ask of Your pleasure and for Paradise, and I seek refuge from Your displeasure and from the Hellfire".</p></div></div>
+    </div></div></div>
 
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js';
@@ -356,8 +323,8 @@
                 onSnapshot(logsRef, (snapshot) => {
                     this.state.logs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                     this.state.logs.sort((a, b) => new Date(b.date) - new Date(a.date));
-                    window.app.renderDashboard(); // Fix: use window.app explicitly
-                    window.app.renderLogs();      // Fix: use window.app explicitly
+                    window.app.renderDashboard();
+                    window.app.renderLogs();
                 }, (err) => { if(err.code === 'permission-denied') document.getElementById('errorModal').classList.remove('hidden'); });
 
                 const lbRef = collection(db, 'artifacts', teamGroupId, 'public', 'data', 'leaderboard');
@@ -370,12 +337,12 @@
                         document.getElementById('appScreen').classList.remove('hidden');
                         document.getElementById('appScreen').classList.add('fade-in');
                         setText('userDisplay', myProfile.name);
-                        window.app.updateKhatamVisuals(myProfile.khatamPage); // Fix: use window.app explicitly
+                        window.app.updateKhatamVisuals(myProfile.khatamPage);
                     } else {
                         document.getElementById('authScreen').classList.remove('hidden');
                         document.getElementById('appScreen').classList.add('hidden');
                     }
-                    window.app.renderLeaderboard(); // Fix: use window.app explicitly
+                    window.app.renderLeaderboard();
                 }, (err) => { if(err.code === 'permission-denied') document.getElementById('errorModal').classList.remove('hidden'); });
             },
 
@@ -427,8 +394,15 @@
                     
                     const fasted = document.getElementById('checkFast').checked;
                     const sadaqah = document.getElementById('checkSadaqah').checked;
+                    const taraweeh = document.getElementById('checkTaraweeh').checked;
+                    const jamaahCount = parseInt(document.getElementById('jamaahCount').value) || 0;
+                    
                     const prayers = [];
                     document.querySelectorAll('.prayer-check:checked').forEach(cb => prayers.push(cb.value));
+                    
+                    if (jamaahCount > prayers.length) {
+                         return alert(`You cannot have more Jama'ah prayers (${jamaahCount}) than total prayers performed (${prayers.length}).`);
+                    }
                     
                     let quranData = null;
                     if (this.state.quranActive) {
@@ -442,9 +416,14 @@
                         if (translation && reflection.length < 10) return alert("Verification Failed: Write a reflection.");
                         quranData = { surah, verses, time, translation, reflection };
                     }
-                    await addDoc(collection(db, 'artifacts', teamGroupId, 'users', this.state.user.uid, 'logs'), { date, fasted, sadaqah, prayers, quran: quranData, timestamp: new Date().toISOString() });
-                    const tempLogs = [...this.state.logs.filter(l => l.date !== date), { fasted, sadaqah, prayers, quran: quranData }];
+                    await addDoc(collection(db, 'artifacts', teamGroupId, 'users', this.state.user.uid, 'logs'), { 
+                        date, fasted, sadaqah, taraweeh, jamaahCount, prayers, quran: quranData, timestamp: new Date().toISOString() 
+                    });
+                    
+                    // Temp update for instant feedback
+                    const tempLogs = [...this.state.logs.filter(l => l.date !== date), { fasted, sadaqah, taraweeh, jamaahCount, prayers, quran: quranData }];
                     await this.updateProfile(tempLogs, this.state.khatamPage);
+                    
                     this.closeLogger();
                     this.showToast("Saved!");
                 } catch (error) { if (error.code === 'permission-denied') document.getElementById('errorModal').classList.remove('hidden'); else alert(error.message); }
@@ -479,7 +458,21 @@
 
             updateProfile: async function(logs, khatam) {
                 let score = 0; let fasts = 0;
-                logs.forEach(l => { if (l.fasted) { score += 50; fasts++; } if (l.prayers) score += (l.prayers.length * 10); if (l.sadaqah) score += 20; if (l.quran) { score += 20; if (l.quran.translation) score += 15; } });
+                logs.forEach(l => { 
+                    if (l.fasted) { score += 50; fasts++; } 
+                    // New Scoring: Prayer Logic
+                    const totalPrayers = l.prayers ? l.prayers.length : 0;
+                    const jamaah = l.jamaahCount || 0;
+                    // Regular prayers (solo) get 10 pts. Jama'ah prayers get 70 pts.
+                    // Assuming 'jamaahCount' is a subset of 'totalPrayers'.
+                    // Example: 5 total, 2 jamaah -> (3 * 10) + (2 * 70)
+                    const soloPrayers = Math.max(0, totalPrayers - jamaah);
+                    score += (soloPrayers * 10) + (jamaah * 70);
+
+                    if (l.sadaqah) score += 20; 
+                    if (l.taraweeh) score += 30; // Added Taraweeh Points
+                    if (l.quran) { score += 20; if (l.quran.translation) score += 15; } 
+                });
                 score += (parseInt(khatam || 0) * 2);
                 const userRef = doc(db, 'artifacts', teamGroupId, 'public', 'data', 'leaderboard', this.state.user.uid);
                 await setDoc(userRef, { score, fasts, khatamPage: parseInt(khatam) }, { merge: true });
@@ -497,9 +490,20 @@
             },
 
             calculateTotalScore: function(logs, khatamPage) {
+                // Re-using logic for consistency in display
                 let score = 0;
-                logs.forEach(l => { if (l.fasted) score += 50; if (l.prayers) score += (l.prayers.length * 10); if (l.sadaqah) score += 20; if (l.quran) { score += 20; if (l.quran.translation) score += 15; } });
-                score += (parseInt(khatam || 0) * 2);
+                logs.forEach(l => { 
+                    if (l.fasted) score += 50; 
+                    const totalPrayers = l.prayers ? l.prayers.length : 0;
+                    const jamaah = l.jamaahCount || 0;
+                    const soloPrayers = Math.max(0, totalPrayers - jamaah);
+                    score += (soloPrayers * 10) + (jamaah * 70);
+                    
+                    if (l.sadaqah) score += 20; 
+                    if (l.taraweeh) score += 30;
+                    if (l.quran) { score += 20; if (l.quran.translation) score += 15; } 
+                });
+                score += (parseInt(khatamPage || 0) * 2);
                 return score;
             },
 
@@ -528,12 +532,7 @@
                     { ar: "إِنَّ رَحْمَتَ ٱللَّهِ قَرِيبٌ مِّنَ ٱلْمُحْسِنِينَ", en: "Indeed, the mercy of Allah is near to the doers of good. (7:56)" },
                     { ar: "قُلْ يَٰعِبَادِىَ ٱلَّذِينَ أَسْرَفُوا۟ عَلَىٰٓ أَنفُسِهِمْ لَا تَقْنَطُوا۟ مِن رَّحْمَةِ ٱللَّهِ", en: "Say, 'O My servants who have transgressed against themselves, do not despair of the mercy of Allah.' (39:53)" },
                     { ar: "وَمَن يَتَوَكَّلْ عَلَى ٱللَّهِ فَهُوَ حَسْبُهُۥ", en: "And whoever relies upon Allah - then He is sufficient for him. (65:3)" },
-                    { ar: "إِنَّ ٱللَّهَ يُحِبُّ ٱلْمُتَوَكِّلِينَ", en: "Indeed, Allah loves those who rely [upon Him]. (3:159)" },
-                    { ar: "وَإِذَا سَأَلَكَ عِبَادِى عَنِّى فَإِنِّى قَرِيبٌ", en: "And when My servants ask you concerning Me - indeed I am near. (2:186)" },
-                    { ar: "لَا يُكَلِّفُ ٱللَّهُ نَفْسًا إِلَّا وُسْعَهَا", en: "Allah does not charge a soul except [with that within] its capacity. (2:286)" },
-                    { ar: "إِنَّمَا يُوَفَّى ٱلصَّٰبِرُونَ أَجْرَهُم بِغَيْرِ حِسَابٍ", en: "Indeed, the patient will be given their reward without account. (39:10)" },
-                    { ar: "وَٱسْتَعِينُوا۟ بِٱلصَّبْرِ وَٱلصَّلَوٰةِ", en: "And seek help through patience and prayer. (2:45)" },
-                    { ar: "رَبَّنَآ ءَاتِنَا فِى ٱلدُّنْيَا حَسَنَةً وَفِى ٱلْـَٔاخِرَةِ حَسَنَةً", en: "Our Lord, give us in this world [that which is] good and in the Hereafter [that which is] good. (2:201)" }
+                    { ar: "إِنَّ ٱللَّهَ يُحِبُّ ٱلْمُتَوَكِّلِينَ", en: "Indeed, Allah loves those who rely [upon Him]. (3:159)" }
                 ];
                 const r = vs[Math.floor(Math.random()*vs.length)];
                 setText('dailyArabic', r.ar);
@@ -555,9 +554,18 @@
                 if (val === undefined) val = this.state.khatamPage;
                 setText('khatamCurrentDisplay', val);
                 const slider = document.getElementById('khatamSlider'); if(slider) slider.value = val;
+                
                 const p = Math.round((val/604)*100);
                 setText('khatamPercent', `${p}% Completed`);
-                const bar = document.getElementById('khatamBar'); if(bar) bar.style.width = `${p}%`;
+                
+                const bar = document.getElementById('khatamBar'); 
+                if(bar) bar.style.width = `${p}%`;
+                
+                const trackFill = document.getElementById('khatamTrackFill');
+                if(trackFill) trackFill.style.width = `${p}%`;
+                
+                const thumb = document.getElementById('khatamThumb');
+                if(thumb) thumb.style.left = `${p}%`;
             },
 
             renderDashboard: function() {
@@ -600,8 +608,10 @@
                     const d = new Date(l.date);
                     const day = d.getDate();
                     const month = d.toLocaleString('default', {month:'short'});
-                    const badges = `${l.fasted ? '<span class="text-[9px] font-bold bg-emerald-900/30 text-emerald-400 px-2 py-0.5 rounded border border-emerald-900/50">FASTED</span>' : ''} ${l.sadaqah ? '<span class="text-[9px] font-bold bg-gold-900/20 text-gold-400 px-2 py-0.5 rounded border border-gold-600/20"><i class="fas fa-hand-holding-heart"></i></span>' : ''} ${l.quran ? '<span class="text-[9px] font-bold bg-blue-900/20 text-blue-400 px-2 py-0.5 rounded border border-blue-600/20"><i class="fas fa-quran"></i></span>' : ''}`;
-                    c.innerHTML += `<div class="glass-panel p-4 rounded-2xl border-l-4 ${l.fasted?'border-l-gold-500':'border-l-gray-700'} flex justify-between items-center group hover:bg-ashes-800/40 transition-colors"><div class="flex items-center gap-4"><div class="bg-ashes-900/80 w-12 h-12 rounded-xl flex flex-col items-center justify-center border border-gray-800"><span class="text-[9px] text-gray-500 uppercase font-bold tracking-wider">${month}</span><span class="text-xl font-bold text-white leading-none font-serif">${day}</span></div><div><div class="flex gap-2 mb-1.5">${badges}</div><div class="text-emerald-400 text-[10px] font-bold"><i class="fas fa-pray"></i> ${l.prayers ? l.prayers.length : 0}/5 Prayers</div></div></div><button onclick="app.deleteLog('${l.id}')" class="text-gray-600 hover:text-red-500 p-2 opacity-0 group-hover:opacity-100 transition-opacity"><i class="fas fa-trash"></i></button></div>`;
+                    const badges = `${l.fasted ? '<span class="text-[9px] font-bold bg-emerald-900/30 text-emerald-400 px-2 py-0.5 rounded border border-emerald-900/50">FASTED</span>' : ''} ${l.sadaqah ? '<span class="text-[9px] font-bold bg-gold-900/20 text-gold-400 px-2 py-0.5 rounded border border-gold-600/20"><i class="fas fa-hand-holding-heart"></i></span>' : ''} ${l.taraweeh ? '<span class="text-[9px] font-bold bg-purple-900/20 text-purple-400 px-2 py-0.5 rounded border border-purple-600/20">Taraweeh</span>' : ''} ${l.quran ? '<span class="text-[9px] font-bold bg-blue-900/20 text-blue-400 px-2 py-0.5 rounded border border-blue-600/20"><i class="fas fa-quran"></i></span>' : ''}`;
+                    const jamaahText = l.jamaahCount > 0 ? `<span class="ml-1 text-[9px] text-gray-400">(${l.jamaahCount} in Masjid)</span>` : '';
+                    
+                    c.innerHTML += `<div class="glass-panel p-4 rounded-2xl border-l-4 ${l.fasted?'border-l-gold-500':'border-l-gray-700'} flex justify-between items-center group hover:bg-ashes-800/40 transition-colors"><div class="flex items-center gap-4"><div class="bg-ashes-900/80 w-12 h-12 rounded-xl flex flex-col items-center justify-center border border-gray-800"><span class="text-[9px] text-gray-500 uppercase font-bold tracking-wider">${month}</span><span class="text-xl font-bold text-white leading-none font-serif">${day}</span></div><div><div class="flex gap-2 mb-1.5 flex-wrap">${badges}</div><div class="text-emerald-400 text-[10px] font-bold"><i class="fas fa-pray"></i> ${l.prayers ? l.prayers.length : 0}/5 Prayers ${jamaahText}</div></div></div><button onclick="app.deleteLog('${l.id}')" class="text-gray-600 hover:text-red-500 p-2 opacity-0 group-hover:opacity-100 transition-opacity"><i class="fas fa-trash"></i></button></div>`;
                 });
             },
 
@@ -609,6 +619,8 @@
                 document.getElementById('logModal').classList.remove('hidden');
                 document.getElementById('checkFast').checked = false;
                 document.getElementById('checkSadaqah').checked = false;
+                document.getElementById('checkTaraweeh').checked = false;
+                document.getElementById('jamaahCount').value = 0;
                 document.querySelectorAll('.prayer-check').forEach(c => c.checked = false);
                 this.toggleQuran(false);
                 document.getElementById('checkTranslation').checked = false;
