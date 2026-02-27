@@ -10,6 +10,9 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Reem+Kufi:wght@400;500;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     
+    <!-- Confetti Library for Celebrations -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
     <script>
         tailwind.config = {
             theme: {
@@ -37,6 +40,7 @@
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
+        
         input[type=range] { -webkit-appearance: none; background: transparent; }
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none; height: 24px; width: 24px; border-radius: 50%;
@@ -44,9 +48,11 @@
             cursor: pointer; margin-top: -10px;
             box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
             border: 2px solid #141414;
+            position: relative; z-index: 20;
         }
         input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: #262626; border-radius: 2px; }
-        .fade-in { animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+        
+        .fade-in { animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .divider-icon::before { content: "۞"; font-family: 'Amiri', serif; color: #d97706; font-size: 1.5rem; }
         .divider-line { height: 1px; flex-grow: 1; background: linear-gradient(90deg, transparent, #d97706 50%, transparent); opacity: 0.3; }
@@ -165,8 +171,9 @@
                 <div class="flex items-center gap-3 bg-ashes-950/80 p-3 rounded-2xl border border-gray-800/50">
                     <button onclick="app.adjustKhatam(-1)" class="w-10 h-10 rounded-xl bg-ashes-800 hover:bg-ashes-700 text-gold-500 border border-gray-700 flex items-center justify-center transition-colors active:scale-95"><i class="fas fa-minus text-xs"></i></button>
                     <div class="flex-1 relative h-6 flex items-center">
-                        <input type="range" min="0" max="604" value="0" id="khatamSlider" class="w-full h-full absolute inset-0 z-10 opacity-0 cursor-pointer" oninput="app.handleKhatamSlide(this.value)">
-                        <div class="w-full h-1.5 bg-gray-700 rounded-full overflow-hidden"><div id="khatamTrackFill" class="h-full bg-gold-600 w-0"></div></div>
+                        <input type="range" min="0" max="604" value="0" id="khatamSlider" class="w-full h-full absolute inset-0 z-20 opacity-0 cursor-pointer" oninput="app.handleKhatamSlide(this.value)">
+                        <div class="w-full h-1 bg-gray-800 rounded-full overflow-hidden relative z-10"><div id="khatamTrackFill" class="h-full bg-gold-600 w-0"></div></div>
+                        <div id="khatamThumb" class="absolute h-5 w-5 bg-gold-500 rounded-full border-2 border-ashes-900 shadow-md z-10 pointer-events-none" style="left: 0%; transform: translateX(-50%)"></div>
                     </div>
                     <button onclick="app.adjustKhatam(1)" class="w-10 h-10 rounded-xl bg-ashes-800 hover:bg-ashes-700 text-gold-500 border border-gray-700 flex items-center justify-center transition-colors active:scale-95"><i class="fas fa-plus text-xs"></i></button>
                 </div>
@@ -183,17 +190,17 @@
                     <div><h3 class="text-white font-bold text-lg uppercase tracking-wider font-serif">Standings</h3></div>
                     <div class="bg-ashes-900/80 px-3 py-1.5 rounded-lg border border-gold-600/20 shadow-lg"><span class="text-[10px] text-gold-500 font-bold flex items-center gap-2 uppercase tracking-wide"><i class="fas fa-crown"></i> Team</span></div>
                 </div>
-                <div class="overflow-x-auto rounded-2xl border border-gray-800/50 bg-ashes-900/20">
+                <div class="overflow-x-auto rounded-2xl border border-gray-800/50 bg-ashes-900/30">
                     <table class="w-full text-left text-sm min-w-[320px]">
-                        <thead class="bg-ashes-950 text-gray-500 uppercase text-[9px] font-bold tracking-widest">
+                        <thead class="bg-ashes-950/80 text-gray-500 uppercase text-[9px] font-bold tracking-widest">
                             <tr>
-                                <th class="px-3 py-4 md:px-5">Rank</th>
+                                <th class="px-3 py-4 md:px-5">#</th>
                                 <th class="px-3 py-4 md:px-5">Member</th>
                                 <th class="px-3 py-4 md:px-5 text-center">Fasts</th>
                                 <th class="px-3 py-4 md:px-5 text-right">Score</th>
                             </tr>
                         </thead>
-                        <tbody id="leaderboardBody" class="divide-y divide-gray-800/50"></tbody>
+                        <tbody id="leaderboardBody" class="divide-y divide-gray-800/50 text-xs"></tbody>
                     </table>
                 </div>
             </div>
@@ -207,6 +214,19 @@
     </div>
 
     <!-- Modals -->
+    
+    <!-- CELEBRATION MODAL -->
+    <div id="celebrationModal" class="fixed inset-0 z-[70] hidden flex items-center justify-center p-4 fade-in">
+        <div class="absolute inset-0 bg-black/90 backdrop-blur-md" onclick="app.closeCelebration()"></div>
+        <div class="relative bg-gradient-to-b from-gold-900/40 to-ashes-900 border border-gold-500/50 rounded-2xl p-8 max-w-sm w-full shadow-[0_0_50px_rgba(245,158,11,0.2)] text-center">
+            <div class="text-6xl mb-4">🏆</div>
+            <h3 class="font-serif text-2xl font-bold text-gold-500 mb-2">1st Ashra Complete!</h3>
+            <p class="text-gray-300 text-sm mb-6">Congratulations to <span id="celebTopperName" class="font-bold text-white text-lg block mt-2">Topper</span> for currently leading the Team Ashes leaderboard!</p>
+            <button onclick="app.closeCelebration()" class="w-full bg-gold-600 hover:bg-gold-500 text-black font-bold py-3 rounded-xl transition-colors text-xs uppercase tracking-widest">Celebrate</button>
+        </div>
+    </div>
+
+    <!-- Error Modal -->
     <div id="errorModal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4 fade-in">
         <div class="absolute inset-0 bg-black/90 backdrop-blur-md"></div>
         <div class="relative bg-ashes-900 border border-red-500/30 rounded-2xl p-8 max-w-md w-full shadow-2xl">
@@ -220,9 +240,10 @@
         </div>
     </div>
 
+    <!-- Log Modal -->
     <div id="logModal" class="fixed inset-0 z-50 hidden">
         <div class="absolute inset-0 bg-black/95 backdrop-blur-md transition-opacity" onclick="app.closeLogger()"></div>
-        <div class="absolute bottom-0 md:top-1/2 md:left-1/2 md:transform md:-translate-x-1/2 md:-translate-y-1/2 md:bottom-auto w-full md:w-[500px] md:rounded-3xl bg-[#0a0a0a] border border-gray-800 shadow-2xl flex flex-col max-h-[90vh] animate-fadeIn ring-1 ring-white/5">
+        <div class="absolute bottom-0 md:top-1/2 md:left-1/2 md:transform md:-translate-x-1/2 md:-translate-y-1/2 md:bottom-auto w-full md:w-[500px] md:rounded-3xl bg-[#080808] border border-gray-800 shadow-2xl flex flex-col max-h-[90vh] animate-fadeIn ring-1 ring-white/5">
             <div class="p-6 border-b border-gray-800 flex justify-between items-center bg-ashes-900/50 rounded-t-3xl"><div><p class="font-arabic text-gold-500 text-xl">بِسْمِ ٱللَّٰهِ</p><p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Daily Log</p></div><button onclick="app.closeLogger()" class="text-gray-500 hover:text-white bg-ashes-800 w-8 h-8 rounded-full flex items-center justify-center transition-colors"><i class="fas fa-times"></i></button></div>
             <div class="overflow-y-auto p-6 space-y-8 flex-1 custom-scrollbar">
                 <div><label class="block text-gray-500 text-[9px] uppercase font-bold mb-2 tracking-widest">Date</label><input type="date" id="logDate" class="w-full bg-ashes-900 border border-gray-800 rounded-xl p-4 text-white focus:border-gold-500 outline-none transition-colors appearance-none text-sm"></div>
@@ -268,17 +289,53 @@
     </div>
 
     <!-- Modals (Duas/Tasbih) -->
-    <div id="tasbihModal" class="fixed inset-0 z-50 hidden"><div class="absolute inset-0 bg-black/95 backdrop-blur-md" onclick="app.closeTasbih()"></div><div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-sm glass-panel p-8 rounded-3xl border border-gold-600/30 text-center"><h3 class="text-gold-500 font-serif text-2xl font-bold mb-1">Tasbih</h3><div class="bg-black/40 rounded-full w-48 h-48 mx-auto flex items-center justify-center border-4 border-gray-800 mb-6 relative"><span id="tasbihCount" class="text-6xl font-mono font-bold text-white relative z-10">0</span><div class="absolute inset-0 rounded-full border-t-2 border-gold-500/20 animate-spin-slow"></div></div><button onclick="app.tasbihClick()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-4 rounded-xl shadow-lg mb-3 text-lg transition-colors">COUNT</button><button onclick="app.tasbihReset()" class="text-xs text-gray-500 hover:text-red-400 transition-colors">RESET COUNTER</button></div></div>
+    <div id="tasbihModal" class="fixed inset-0 z-50 hidden"><div class="absolute inset-0 bg-black/95 backdrop-blur-md" onclick="app.closeTasbih()"></div><div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-sm glass-panel p-8 rounded-3xl border border-gold-600/30 text-center animate-fadeIn"><h3 class="text-gold-500 font-serif text-2xl font-bold mb-1">Tasbih</h3><div class="bg-black/40 rounded-full w-48 h-48 mx-auto flex items-center justify-center border-4 border-gray-800 mb-6 relative"><span id="tasbihCount" class="text-6xl font-mono font-bold text-white relative z-10">0</span><div class="absolute inset-0 rounded-full border-t-2 border-gold-500/20 animate-spin-slow"></div></div><button onclick="app.tasbihClick()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-4 rounded-xl shadow-lg mb-3 text-lg transition-colors">COUNT</button><button onclick="app.tasbihReset()" class="text-xs text-gray-500 hover:text-red-400 transition-colors">RESET COUNTER</button></div></div>
     <div id="duasModal" class="fixed inset-0 z-50 hidden"><div class="absolute inset-0 bg-black/95 backdrop-blur-md" onclick="app.closeDuas()"></div><div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md h-[80vh] glass-panel rounded-3xl border border-gray-800 flex flex-col"><div class="p-5 border-b border-gray-800 flex justify-between items-center"><h3 class="text-gold-500 font-serif text-2xl font-bold">Essential Duas</h3><button onclick="app.closeDuas()" class="text-gray-500 hover:text-white"><i class="fas fa-times"></i></button></div><div class="p-6 overflow-y-auto space-y-6 flex-1 custom-scrollbar">
         <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Moon Sighting (Hilal)</p><p class="font-arabic text-xl text-right mb-2 leading-loose">اللَّهُمَّ أَهِلَّهُ عَلَيْنَا بِالْأَمْنِ وَالْإِيمَانِ، وَالسَّلَامَةِ وَالْإِسْلَامِ، رَبِّي وَرَبُّكَ اللَّهُ</p><p class="text-xs text-gray-400 italic">"O Allah, let this moon appear on us with security and faith; with safety and Islam. (O Moon!) My Lord and your Lord is Allah."</p></div>
         <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Suhoor (Intention)</p><p class="font-arabic text-xl text-right mb-2 leading-loose">وَبِصَوْمِ غَدٍ نَّوَيْتُ مِنْ شَهْرِ رَمَضَانَ</p><p class="text-xs text-gray-400 italic">"I intend to keep the fast for tomorrow in the month of Ramadan."</p></div>
         <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Iftar (Breaking Fast)</p><p class="font-arabic text-xl text-right mb-2 leading-loose">اللَّهُمَّ لَكَ صُمْتُ وَعَلَى رِزْقِكَ أَفْطَرْتُ</p><p class="text-xs text-gray-400 italic">"O Allah, I fasted for You and I break my fast with Your sustenance."</p></div>
         <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Iftar (As Guest)</p><p class="font-arabic text-xl text-right mb-2 leading-loose">أَفْطَرَ عِنْدَكُمُ الصَّائِمُونَ، وَأَكَلَ طَعَامَكُمُ الْأَبْرَارُ، وَصَلَّتْ عَلَيْكُمُ الْمَلَائِكَةُ</p><p class="text-xs text-gray-400 italic">"May the fasting people break fasting at your place, and may the pious eat your food, and may the angels pray for you."</p></div>
         <div class="flex items-center gap-3 justify-center opacity-30 my-2"><div class="h-px w-10 bg-white"></div><span class="text-xs">۞</span><div class="h-px w-10 bg-white"></div></div>
-        <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">First 10 Days: Mercy (Rahmah)</p><p class="font-arabic text-xl text-right mb-2 leading-loose">رَبِّ اغْفِرْ وَارْحَمْ وَأَنْتَ خَيْرُ الرَّاحِمِينَ</p><p class="text-xs text-gray-400 italic mb-2">"My Lord, forgive and have mercy, for You are the Best of those who show mercy".</p><p class="text-[9px] text-gray-500 mt-2 border-t border-gray-700/30 pt-1">Alt: Ya Hayyu Ya Qayyumu Birahmatika asta-ghee-thu</p></div>
-        <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Second 10 Days: Forgiveness (Maghfirah)</p><p class="font-arabic text-xl text-right mb-2 leading-loose">اللَّهُمَّ اغْفِرْ لِي ذُنُوبِي يَا رَبَّ الْعَالَمِينَ</p><p class="text-xs text-gray-400 italic mb-2">"O Allah, forgive my sins, O Lord of the Worlds."</p><p class="text-[9px] text-gray-500 mt-2 border-t border-gray-700/30 pt-1">Alt: Astaghfirullahal-ladhi la ilaha illa Huwal-Hayyul-Qayyumu wa atubu ilaih</p></div>
-        <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50"><p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Third 10 Days: Salvation (Itqun-min-an-Naar)</p><div class="mb-4 border-b border-gray-700/30 pb-3"><p class="text-[9px] text-emerald-500 font-bold mb-1 uppercase">Laylatul Qadr / Forgiveness</p><p class="font-arabic text-lg text-right mb-1 leading-loose">اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي</p><p class="text-[10px] text-gray-400 italic">"O Allah, You are the Most Forgiving, and You love to forgive, so forgive me".</p></div><div><p class="text-[9px] text-emerald-500 font-bold mb-1 uppercase">Protection from Hellfire</p><p class="font-arabic text-lg text-right mb-1 leading-loose">اللَّهُمَّ إِنِّي أَسْأَلُكَ رِضَاكَ وَالجَنَّةَ ، وَأَعُوذُ بِكَ مِنْ سَخَطِكَ وَالنَّارِ</p><p class="text-[10px] text-gray-400 italic">"O Allah, I ask of Your pleasure and for Paradise, and I seek refuge from Your displeasure and from the Hellfire".</p></div></div>
+        
+        <!-- First 10 Days -->
+        <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50">
+            <p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">First 10 Days: Mercy (Rahmah)</p>
+            <p class="font-arabic text-xl text-right mb-2 leading-loose">رَبِّ اغْفِرْ وَارْحَمْ وَأَنْتَ خَيْرُ الرَّاحِمِينَ</p>
+            <p class="text-[10px] text-gray-400 italic mb-2">Rabbighfir warham wa anta khair-ur-raahimeen.</p>
+            <p class="text-[10px] text-gray-300">"My Lord, forgive and have mercy, for You are the Best of those who show mercy".</p>
+            <p class="text-[9px] text-gray-500 mt-2 border-t border-gray-700/30 pt-1">Alt: Ya Hayyu Ya Qayyumu Birahmatika asta-ghee-thu</p>
+        </div>
+
+        <!-- Second 10 Days -->
+        <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50">
+            <p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Second 10 Days: Forgiveness (Maghfirah)</p>
+            <p class="font-arabic text-xl text-right mb-2 leading-loose">اللَّهُمَّ اغْفِرْ لِي ذُنُوبِي يَا رَبَّ الْعَالَمِينَ</p>
+            <p class="text-[10px] text-gray-400 italic mb-2">Allahumma-ghfir lee dhunoobi ya rabbal 'alameen.</p>
+            <p class="text-[10px] text-gray-300">"O Allah, forgive my sins, O Lord of the Worlds."</p>
+            <p class="text-[9px] text-gray-500 mt-2 border-t border-gray-700/30 pt-1">Alt: Astaghfirullahal-ladhi la ilaha illa Huwal-Hayyul-Qayyumu wa atubu ilaih</p>
+        </div>
+
+        <!-- Third 10 Days -->
+        <div class="bg-ashes-900/50 p-4 rounded-xl border border-gray-700/50">
+            <p class="text-[10px] text-gold-500 uppercase font-bold mb-2 tracking-widest">Third 10 Days: Salvation (Itqun-min-an-Naar)</p>
+            
+            <div class="mb-4 border-b border-gray-700/30 pb-3">
+                <p class="text-[9px] text-emerald-500 font-bold mb-1 uppercase">Laylatul Qadr / Forgiveness</p>
+                <p class="font-arabic text-xl text-right mb-1 leading-loose">اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي</p>
+                <p class="text-[10px] text-gray-400 italic mb-1">Allahumma innaka 'afuwwun, tuhibb al-'afwa, fa'fu 'anni.</p>
+                <p class="text-[10px] text-gray-300">"O Allah, You are the Most Forgiving, and You love to forgive, so forgive me".</p>
+            </div>
+
+            <div>
+                <p class="text-[9px] text-emerald-500 font-bold mb-1 uppercase">Protection from Hellfire</p>
+                <p class="font-arabic text-xl text-right mb-1 leading-loose">اللَّهُمَّ إِنِّي أَسْأَلُكَ رِضَاكَ وَالجَنَّةَ ، وَأَعُوذُ بِكَ مِنْ سَخَطِكَ وَالنَّارِ</p>
+                <p class="text-[10px] text-gray-400 italic mb-1">Allahumma innee as-aluka Ridaaka wal Jannah wa a'audhu'bika min sakhatika wan-naar.</p>
+                <p class="text-[10px] text-gray-300">"O Allah, I ask of Your pleasure and for Paradise, and I seek refuge from Your displeasure and from the Hellfire".</p>
+            </div>
+        </div>
     </div></div></div>
+
+    <div id="toast" class="fixed top-5 right-5 z-50 transform translate-x-full transition-transform duration-300"><div class="bg-ashes-800 border-l-4 border-gold-500 text-white px-6 py-4 rounded-lg shadow-2xl flex items-center border border-gray-700/50"><i class="fas fa-check-circle text-gold-500 mr-3 text-xl"></i><div><h4 class="font-bold text-sm text-white">Success</h4><p class="text-xs text-gray-400" id="toastMsg">Action completed</p></div></div></div>
 
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js';
@@ -303,7 +360,7 @@
         const setText = (id, val) => { const el = document.getElementById(id); if (el) el.innerText = val; };
 
         window.app = {
-            state: { user: null, logs: [], leaderboard: [], khatamPage: 0, quranActive: false, tasbihCount: 0 },
+            state: { user: null, logs: [], leaderboard: [], khatamPage: 0, quranActive: false, tasbihCount: 0, milestoneChecked: false },
 
             init: async function() {
                 try { await signInAnonymously(auth); } catch (error) { console.error("Auth Failed", error); }
@@ -343,7 +400,52 @@
                         document.getElementById('appScreen').classList.add('hidden');
                     }
                     window.app.renderLeaderboard();
+                    
+                    if (!window.app.state.milestoneChecked) {
+                        window.app.checkMilestones();
+                        window.app.state.milestoneChecked = true;
+                    }
                 }, (err) => { if(err.code === 'permission-denied') document.getElementById('errorModal').classList.remove('hidden'); });
+            },
+
+            // --- Celebrations & Milestones ---
+            checkMilestones: function() {
+                if (!this.state.leaderboard || this.state.leaderboard.length === 0) return;
+
+                const today = new Date();
+                // Target: Feb 28, 2026 (Ramadan 10) or later
+                const isRamadan10 = today.getFullYear() === 2026 && 
+                                    ((today.getMonth() === 1 && today.getDate() >= 28) || today.getMonth() > 1);
+
+                // Only show once per user browser
+                if (isRamadan10 && !localStorage.getItem('ashra1_celeb_26')) {
+                    const sorted = [...this.state.leaderboard].sort((a,b) => b.score - a.score);
+                    const topper = sorted[0];
+                    
+                    if (topper) {
+                        // 1. Fire Confetti
+                        try {
+                            const duration = 3000;
+                            const end = Date.now() + duration;
+                            (function frame() {
+                                confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#fbbf24', '#f59e0b', '#d97706', '#10b981'] });
+                                confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#fbbf24', '#f59e0b', '#d97706', '#10b981'] });
+                                if (Date.now() < end) requestAnimationFrame(frame);
+                            }());
+                        } catch(e) { console.error(e); }
+
+                        // 2. Show Modal
+                        document.getElementById('celebTopperName').innerText = topper.name;
+                        document.getElementById('celebrationModal').classList.remove('hidden');
+                        
+                        // 3. Mark as celebrated
+                        localStorage.setItem('ashra1_celeb_26', 'true');
+                    }
+                }
+            },
+
+            closeCelebration: function() {
+                document.getElementById('celebrationModal').classList.add('hidden');
             },
 
             login: async function() {
@@ -422,16 +524,16 @@
                     
                     // Temp update for instant feedback
                     const tempLogs = [...this.state.logs.filter(l => l.date !== date), { fasted, sadaqah, taraweeh, jamaahCount, prayers, quran: quranData }];
-                    await this.updateProfile(tempLogs, this.state.khatamPage);
+                    await window.app.updateProfile(tempLogs, this.state.khatamPage);
                     
                     this.closeLogger();
                     this.showToast("Saved!");
                 } catch (error) { if (error.code === 'permission-denied') document.getElementById('errorModal').classList.remove('hidden'); else alert(error.message); }
             },
 
-            deleteLog: async function(id) { try { if(!confirm("Delete entry?")) return; await deleteDoc(doc(db, 'artifacts', teamGroupId, 'users', this.state.user.uid, 'logs', id)); const tempLogs = this.state.logs.filter(l => l.id !== id); await this.updateProfile(tempLogs, this.state.khatamPage); this.showToast("Deleted"); } catch (error) { if (error.code === 'permission-denied') document.getElementById('errorModal').classList.remove('hidden'); } },
+            deleteLog: async function(id) { try { if(!confirm("Delete entry?")) return; await deleteDoc(doc(db, 'artifacts', teamGroupId, 'users', this.state.user.uid, 'logs', id)); const tempLogs = this.state.logs.filter(l => l.id !== id); await window.app.updateProfile(tempLogs, this.state.khatamPage); this.showToast("Deleted"); } catch (error) { if (error.code === 'permission-denied') document.getElementById('errorModal').classList.remove('hidden'); } },
 
-            saveKhatam: async function() { try { const val = document.getElementById('khatamSlider').value; this.state.khatamPage = val; await this.updateProfile(this.state.logs, val); this.showToast("Khatam Updated"); } catch (error) { if (error.code === 'permission-denied') document.getElementById('errorModal').classList.remove('hidden'); } },
+            saveKhatam: async function() { try { const val = document.getElementById('khatamSlider').value; this.state.khatamPage = val; await window.app.updateProfile(this.state.logs, val); this.showToast("Khatam Updated"); } catch (error) { if (error.code === 'permission-denied') document.getElementById('errorModal').classList.remove('hidden'); } },
             
             adjustKhatam: function(amount) {
                 const slider = document.getElementById('khatamSlider');
