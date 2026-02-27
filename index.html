@@ -413,9 +413,10 @@
                 if (!this.state.leaderboard || this.state.leaderboard.length === 0) return;
 
                 const today = new Date();
-                // Target: Feb 28, 2026 (Ramadan 10) or later
-                const isRamadan10 = today.getFullYear() === 2026 && 
-                                    ((today.getMonth() === 1 && today.getDate() >= 28) || today.getMonth() > 1);
+                // Target: March 1, 2026 (Ramadan 10 in India) or later
+                // Note: in JavaScript Date, months are 0-indexed (0 = Jan, 1 = Feb, 2 = March)
+                const targetDate = new Date(2026, 2, 1); 
+                const isRamadan10 = today >= targetDate;
 
                 // Only show once per user browser
                 if (isRamadan10 && !localStorage.getItem('ashra1_celeb_26')) {
