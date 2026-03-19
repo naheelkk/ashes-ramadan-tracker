@@ -11,7 +11,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Reem+Kufi:wght@400;500;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <!-- Confetti Library for Celebrations -->
-    <!-- Using a more stable version of canvas-confetti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
     
     <script>
@@ -58,7 +57,7 @@
         .divider-icon::before { content: "۞"; font-family: 'Amiri', serif; color: #d97706; font-size: 1.5rem; }
         .divider-line { height: 1px; flex-grow: 1; background: linear-gradient(90deg, transparent, #d97706 50%, transparent); opacity: 0.3; }
         
-        /* Container for Confetti to prevent errors with specific library expectations */
+        /* Container for Confetti */
         #confetti-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
     </style>
 </head>
@@ -123,19 +122,9 @@
             <div class="text-center opacity-60 mb-2">
                 <p class="font-arabic text-3xl text-gold-500/50">بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</p>
             </div>
-
-            <div class="glass-panel p-8 rounded-[2rem] text-center border-t border-gold-600/20 relative overflow-hidden group">
-                <div class="absolute -top-24 -left-24 w-64 h-64 bg-gold-600/5 rounded-full blur-3xl group-hover:bg-gold-600/10 transition-colors duration-1000"></div>
-                <div class="relative z-10">
-                    <div class="flex items-center justify-center gap-3 mb-4 opacity-50">
-                        <div class="h-px w-8 bg-gold-600"></div>
-                        <span class="text-[10px] text-gold-500 uppercase tracking-[0.3em]">Daily Verse</span>
-                        <div class="h-px w-8 bg-gold-600"></div>
-                    </div>
-                    <p class="font-arabic text-3xl md:text-4xl text-white mb-4 leading-[2.2] drop-shadow-md" id="dailyArabic">Loading...</p>
-                    <p class="text-gray-400 text-sm italic font-serif leading-relaxed px-4" id="dailyEnglish">Loading...</p>
-                </div>
-            </div>
+            
+            <!-- Eid Banner Container -->
+            <div id="eidBannerContainer"></div>
 
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <div class="glass-panel p-5 rounded-2xl text-center hover:bg-ashes-800/40 transition-colors group"><p class="text-3xl font-bold text-white mb-1 group-hover:text-gold-400 transition-colors" id="statFasts">0</p><p class="text-[9px] text-gray-500 uppercase tracking-widest font-bold">Fasts</p></div>
@@ -144,7 +133,7 @@
                 <div class="glass-panel p-5 rounded-2xl text-center hover:bg-ashes-800/40 transition-colors bg-gradient-to-b from-ashes-800/50 to-transparent"><p class="text-3xl font-bold text-gold-500 mb-1 font-mono" id="statPoints">0</p><p class="text-[9px] text-gray-500 uppercase tracking-widest font-bold">Score</p></div>
             </div>
 
-            <button onclick="TrackerApp.openLogger()" class="w-full bg-gradient-to-r from-ashes-800 to-ashes-900 border border-gold-600/20 hover:border-gold-500/50 p-6 rounded-[1.5rem] flex items-center justify-between group transition-all shadow-xl hover:shadow-gold-900/10 active:scale-[0.99]">
+            <button id="logProgressBtn" onclick="TrackerApp.openLogger()" class="w-full bg-gradient-to-r from-ashes-800 to-ashes-900 border border-gold-600/20 hover:border-gold-500/50 p-6 rounded-[1.5rem] flex items-center justify-between group transition-all shadow-xl hover:shadow-gold-900/10 active:scale-[0.99]">
                 <div class="text-left pl-2">
                     <h3 class="text-xl font-serif font-bold text-white group-hover:text-gold-400 transition-colors">Log Daily Progress</h3>
                     <p class="text-xs text-gray-500 mt-1 uppercase tracking-wider">Record Salah, Fasting, Quran</p>
@@ -227,7 +216,7 @@
         <div class="relative bg-gradient-to-b from-gold-900/40 to-ashes-900 border border-gold-500/50 rounded-2xl p-8 max-w-sm w-full shadow-[0_0_50px_rgba(245,158,11,0.2)] text-center">
             <div class="text-6xl mb-4">🏆</div>
             <h3 id="celebTitle" class="font-serif text-2xl font-bold text-gold-500 mb-2">Ashra Complete!</h3>
-            <p class="text-gray-300 text-sm mb-6">Congratulations to <span id="celebTopperName" class="font-bold text-white text-lg block mt-2">Topper</span> for currently leading the Team Ashes leaderboard!</p>
+            <p id="celebBody" class="text-gray-300 text-sm mb-6">Congratulations to <span id="celebTopperName" class="font-bold text-white text-lg block mt-2">Topper</span> for currently leading the Team Ashes leaderboard!</p>
             <button onclick="TrackerApp.closeCelebration()" class="w-full bg-gold-600 hover:bg-gold-500 text-black font-bold py-3 rounded-xl transition-colors text-xs uppercase tracking-widest">Celebrate</button>
         </div>
     </div>
@@ -419,6 +408,7 @@
                 if (!TrackerApp.state.leaderboard || TrackerApp.state.leaderboard.length === 0) return;
 
                 const today = new Date();
+                const targetEid = new Date(2026, 2, 19); // March 19, 2026
                 const targetDate2 = new Date(2026, 2, 21); 
                 const targetDate1 = new Date(2026, 2, 11); 
 
@@ -427,7 +417,18 @@
                 
                 if (!topper) return;
 
-                if (today >= targetDate2 && !localStorage.getItem('ashra2_celeb_26')) {
+                // Check Eid First (Ramadan is over)
+                if (today >= targetEid && !localStorage.getItem('eid_celeb_26')) {
+                    TrackerApp.showCelebration(
+                        topper.name, 
+                        "🌙 Eid Mubarak! 🌙", 
+                        `Ramadan has come to an end! May Allah accept our fasts and prayers.<br><br>A huge congratulations to Ashes Champion:<br><span class="font-bold text-white text-2xl block mt-2 text-gold-400">${topper.name}</span><br>Finishing at the top with ${topper.score} points!`
+                    );
+                    localStorage.setItem('eid_celeb_26', 'true');
+                    localStorage.setItem('ashra2_celeb_26', 'true');
+                    localStorage.setItem('ashra1_celeb_26', 'true'); 
+                }
+                else if (today >= targetDate2 && !localStorage.getItem('ashra2_celeb_26')) {
                     TrackerApp.showCelebration(topper.name, "2nd Ashra Complete!");
                     localStorage.setItem('ashra2_celeb_26', 'true');
                     localStorage.setItem('ashra1_celeb_26', 'true'); 
@@ -438,18 +439,20 @@
                 }
             },
 
-            showCelebration: function(topperName, title) {
-                // Removed explicit canvas creation that was causing getBoundingClientRect issues
-                // Reverting to the simplest usage of canvas-confetti which is more stable
-                if (typeof window.confetti === 'function') {
+            showCelebration: function(topperName, title, customBody) {
+                const myCanvas = document.getElementById('confetti-canvas');
+                if (myCanvas && typeof window.confetti === 'function') {
                     try {
-                        const duration = 3000;
+                        const myConfetti = window.confetti.create(myCanvas, {
+                            resize: true,
+                            useWorker: true
+                        });
+                        const duration = 5000;
                         const end = Date.now() + duration;
                         
                         (function frame() {
-                            // Using standard confetti calls without trying to create/manage the canvas ourselves
-                            window.confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#fbbf24', '#f59e0b', '#d97706', '#10b981'], zIndex: 10000 });
-                            window.confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#fbbf24', '#f59e0b', '#d97706', '#10b981'], zIndex: 10000 });
+                            myConfetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0, y: 0.8 }, colors: ['#fbbf24', '#f59e0b', '#d97706', '#10b981'], zIndex: 10000 });
+                            myConfetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1, y: 0.8 }, colors: ['#fbbf24', '#f59e0b', '#d97706', '#10b981'], zIndex: 10000 });
                             if (Date.now() < end) requestAnimationFrame(frame);
                         }());
                     } catch(e) { console.error("Confetti Error:", e); }
@@ -458,7 +461,15 @@
                 const titleEl = document.getElementById('celebTitle');
                 if(titleEl) titleEl.innerText = title;
                 
-                document.getElementById('celebTopperName').innerText = topperName;
+                const bodyEl = document.getElementById('celebBody');
+                if(bodyEl) {
+                    if(customBody) {
+                        bodyEl.innerHTML = customBody;
+                    } else {
+                        bodyEl.innerHTML = `Congratulations to <span id="celebTopperName" class="font-bold text-white text-lg block mt-2">${topperName}</span> for currently leading the Team Ashes leaderboard!`;
+                    }
+                }
+                
                 document.getElementById('celebrationModal').classList.remove('hidden');
             },
 
@@ -591,6 +602,37 @@
                 setText('statSalah', `${sp}%`);
                 setText('statStreak', streak);
                 setText('statPoints', score.toLocaleString());
+
+                // Handle Eid Banner on main dashboard
+                const today = new Date();
+                const targetEid = new Date(2026, 2, 19); 
+                const bannerContainer = document.getElementById('eidBannerContainer');
+                const logBtn = document.getElementById('logProgressBtn');
+
+                if (today >= targetEid && TrackerApp.state.leaderboard && TrackerApp.state.leaderboard.length > 0) {
+                    const sorted = [...TrackerApp.state.leaderboard].sort((a,b) => b.score - a.score);
+                    const topper = sorted[0];
+
+                    if (bannerContainer) {
+                        bannerContainer.innerHTML = `
+                            <div class="glass-panel p-6 rounded-2xl text-center border-t border-emerald-500/50 relative overflow-hidden mb-6 bg-gradient-to-b from-emerald-900/20 to-transparent">
+                                <div class="text-5xl mb-3">🌙</div>
+                                <h2 class="text-2xl font-serif font-bold text-emerald-400 mb-2">Eid Mubarak!</h2>
+                                <p class="text-gray-300 text-sm mb-4">Ramadan 1447 has officially concluded. May Allah accept our fasts, prayers, and good deeds.</p>
+                                <div class="bg-black/40 p-4 rounded-xl border border-gold-500/30 inline-block w-full max-w-md mx-auto shadow-[0_0_15px_rgba(245,158,11,0.1)]">
+                                    <p class="text-[10px] text-gold-500 uppercase tracking-widest font-bold mb-1">Team Ashes Champion</p>
+                                    <p class="text-xl font-bold text-white flex justify-center items-center gap-2">
+                                        <i class="fas fa-crown text-gold-500"></i> ${topper.name} <i class="fas fa-crown text-gold-500"></i>
+                                    </p>
+                                    <p class="text-xs text-gray-400 mt-1">Winning Score: <span class="text-gold-400 font-bold">${topper.score.toLocaleString()}</span></p>
+                                </div>
+                            </div>
+                        `;
+                    }
+                    if (logBtn) {
+                        logBtn.style.display = 'none';
+                    }
+                }
             },
 
             handleKhatamSlide: function(val) {
